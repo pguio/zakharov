@@ -1,6 +1,6 @@
 
 
-pkgdata_DATA = A.conf B.conf beam.conf C.conf CVS efluct0_1.conf \
+pkgdata_DATA = A.conf B.conf beam.conf C.conf efluct0_1.conf \
 efluct0_5.conf efluct10.conf efluct1.conf egauss1200.conf egauss2400.conf \
 egauss600.conf egs2001.conf ekbeam.conf maxwell4096.conf \
 payne_et_al_1983_fig11_12_1000iter.conf \
