@@ -1,0 +1,1666 @@
+2023-02-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde5.m (1.24), matlab/sde6.m (1.20):
+	Updated call to newer LU decomposition.
+
+2023-02-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/linwaves.tex (1.27):
+	Updated to UTF-8 encoding.
+
+2023-02-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/linwaves.m (1.20):
+	Updated call to exportfig with opts structure.
+
+2023-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.94):
+	Updated with autoupdate 2.71.
+
+2023-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.93):
+	Added option subdir-objects to AM_INIT_AUTOMAKE().
+
+2020-07-06  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f32_x86_64_g++_optim_jazz5 (1.1):
+	New config for jazz5.
+
+2020-04-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/default-mode.cpp (1.32), src/density-fluct.cpp (1.12),
+	  src/density-parab.cpp (1.5):
+	Removed unused variables.
+
+2020-04-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/Makefile.am (1.34):
+	Removed unused file.
+
+2020-04-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f31_x86_64_g++_optim_jazz3 (1.1):
+	New config for jazz3 running fedora 31.
+
+2019-11-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f31_x86_64_g++_optim_jazz4 (1.3):
+	Minor fix.
+
+2019-11-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f31_x86_64_g++_optim_jazz4 (1.2):
+	Fixed library path problem for hdf5 1.8.x.
+
+2019-11-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f31_x86_64_g++_optim_jazz4 (1.1):
+	New config for fedora 31 and deal with hdf5 1.10.x.
+
+2019-05-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Zakharov.cpp (1.27):
+	Removed BZ_STD_SCOPE as deprecated in Blitz.
+
+2019-05-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-fluct.cpp (1.11), src/spectra.cpp (1.48),
+	  src/spectra.h (1.68), src/zakharov-defs.h (1.56),
+	  src/zakharov.cpp (1.233):
+	Get rid of some warnings from g++ version 9.1.
+
+2017-09-26  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f26_x86_64_clang_optim_jazz4 (1.1):
+	New config file for clang++ compiler on jazz4.
+
+2016-06-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Zakharov.cpp (1.26):
+	Added a std::exception catch, added const modifier to all catch's and
+	reviewed their ordering.
+
+2016-06-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f23_x86_64_ifort_optim_jazz3 (1.1):
+	New configuration for jazz3 running fedora 23.
+
+2014-10-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.92):
+	Bundled a new patched version 1.13.1.
+
+2014-10-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.232):
+	Fixed calculation of y min value when nk in dB due to nk = 0 for k=0.
+	Changed xlim for diffusion diagnostic.
+
+2014-10-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.91):
+	Bundled a new minor version 1.13.0.
+
+2014-10-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.231), src/zakharov.h (1.158):
+	Redesign plotting into three different windows: (i) n, E in configuration
+	space, (ii) n, E in Fourier space, and optionally (iii) nue and Fe when
+	quasi linear diffusion.
+
+2014-10-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.121), src/mapper.h (1.68):
+	Added get queries to return `Alpha' axis, i.e.  wavenumber x Debye length.
+	Added comment to phase space diffusion code.
+	Disabled code with advection term in the quasi linear diffusion, works need
+	to be done.
+
+2014-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.90):
+	Bundled a new patched version 1.12.5.
+
+2014-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.86), src/mapper.cpp (1.120):
+	Fixed bug in the wavenumber dimension in diffusion diagnostics (nue and Fe).
+
+2014-09-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.89):
+	Bundled a new patched version 1.12.4.
+
+2014-09-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/A.conf (1.13), share/B.conf (1.9), share/C.conf (1.11):
+	Make HDF5 extension .h5 the default.
+
+2014-09-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.230):
+	Added diagnostics for CFL for wave and Schroedinger equations.
+
+2014-09-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f19_x86_64_ifort_optim_jazz3 (1.2):
+	Updated deprecated option for vectorisation reporting in Intel icpc
+	15.0.0 20140723.
+
+2014-08-29  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f19_x86_64_ifort_debug_jazz3 (1.1):
+	Added debug mode ifort config.
+
+2014-08-29  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/spectra.h (1.67):
+	Added check for spectra time specs.
+
+2014-05-09  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/rh5.9_x86_64_ifort_optim_phalanx (1.1):
+	Added config file for phalanx.
+
+2013-11-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f19_x86_64_ifort_optim_jazz3 (1.1):
+	Configuration for jazz3 (64 bits Fedora 19).
+
+2013-11-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* lib/Makefile.am (1.9), tests/Makefile.am (1.10):
+	Updated INCLUDES target name to AM_CPPFLAGS as recommended.
+
+2012-11-09  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.88):
+	Bundled a new patched version 1.12.3.
+
+2012-11-09  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f16_x86_64_ifort_optim_jazz2 (1.2):
+	Added configuration for hdf5 output support.
+
+2012-11-09  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.87):
+	Added available hdf5 support through --enable-hdf5-output.
+
+2012-07-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f16_x86_64_g++_optim_jazz2 (1.1),
+	  config/sites/f16_x86_64_ifort_optim_jazz2 (1.1):
+	Configurations for updated jazz2 (64 bits Fedora 16).
+
+2011-11-15  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f14_ia32_ifort+mpif90+skin_optim_jazz2 (1.1):
+	Added configuration for jazz2, PG's laptop to compile with support for
+	scalasca profiler.
+
+2011-11-15  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* Makefile.am (1.8), src/Makefile.am (1.33), matlab/Makefile.am
+	  (1.9):
+	Updated EXTRA_DIST and *_DATA targets.
+
+2011-11-15  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Zakharov.cpp (1.25):
+	Enabled conditional support for MPI in order to be able to use scalasca
+	profiler.
+
+2011-11-15  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.86):
+	Added test for testing MPI availability.
+
+2011-11-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* config/sites/f14_ia32_ifort_optim_jazz2 (1.1):
+	Added configuration for jazz2, PG's laptop.
+	You need to run at the prompt the following command
+	./configure CONFIG_SITE=config/sites/f14_ia32_ifort_optim_jazz2
+	The name convention is inspired from the MITgcm project convention and is
+	found in the directory "tools/build_options" of the MITgcm cvs distribution.
+
+2011-11-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/time-integrate-pump.cpp (1.3):
+	Added explicitly blitz namespace for real and imag functions for an
+	expression with complex array and constant as the new version of ifort
+	seems to have problem to deal with it.
+
+2011-11-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/spectra.h (1.66):
+	Cosmetic change in variables name in member function declaration.
+
+2011-11-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/range-spec.h (1.3):
+	Added macro for conditional compilation depending on whether the "old"
+	blitz is in use or the new version with unified template machinery.
+
+2011-04-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.85):
+	Bundled a new patched version 1.12.2.
+
+2011-04-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.119):
+	Added some comments on the constant returned by getN2Wconstant(). Fixed the
+	value when running the code in normalised units directly assuming Te>>Ti
+	and electron-to-proton mass ratio. When the condition Te>>Ti does not hold,
+	N2W increases by the factor (1+3Ti/Te)^2. For heavier ions, N2W decreases
+	by the factor mi/mp.
+
+2011-04-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.229):
+	Added comments for Parseval theorem forms for time physical dimension.
+
+2011-04-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.228):
+	Added some comments.
+	Added unused block to validate Parseval theorem forms for discrete Fourier
+	transform and spatial physical dimensions.
+
+2011-04-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.55):
+	Added an inlined absolute square function for complex numbers |z|^2.
+
+2011-04-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.84):
+	Bundled a new patched version 1.12.1.
+
+2011-04-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.118):
+	Fixed member getN2Wconstant() that returns the constant to convert
+	normalised N into normalised energy density W. The constant was too small
+	by the factor \chi (normalisation length).
+
+2011-04-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.83):
+	Bundled a new minor version 1.12.0.
+
+2011-04-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* lib/Makefile.am (1.8), src/Makefile.am (1.32):
+	Updated to handle the new time integrator timeIntegrateNoFp().
+
+2011-04-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/time-integrate-linear.cpp (1.3):
+	Added calculation of SSE term, which is of course expected to be zero since
+	there should be no correlation between Langmuir and ion-acoustic modes.
+
+2011-04-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.227), src/zakharov.h (1.157):
+	Added support for new time integrator member function timeIntegrateNoFp()
+	(without ponderomtive force feedback).
+
+2011-04-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/time-integrate-noFp.cpp (1.1):
+	New time integrator without ponderomotive force feedback.
+
+2011-04-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/time-integrate-fixed-n.cpp (1.4):
+	Cosmetic changes.
+
+2011-04-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/time-integrate-classic.cpp (1.3):
+	Removed unecessary FFT to update nj from nkh, instead use njh calculated
+	earlier.
+
+2011-03-26  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* update-cl.sh (1.5):
+	Added matlab directory to be logged in ChangeLog.
+
+2011-03-26  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/A.m (1.7), matlab/B.m (1.7), matlab/C.m (1.8),
+	  matlab/CGSconstants.m (1.3), matlab/CN2.c (1.3), matlab/FFT.m
+	  (1.9), matlab/IFFT.m (1.7), matlab/SIconstants.m (1.6),
+	  matlab/analytic_inf_one_soliton.m (1.7),
+	  matlab/analytic_one_soliton.m (1.6), matlab/beam.m (1.27),
+	  matlab/beam_param_init.m (1.8), matlab/checkeigen.m (1.2),
+	  matlab/checkw.m (1.2), matlab/cmpis_isi.m (1.3), matlab/cmplw.m
+	  (1.5), matlab/collisions.m (1.10), matlab/derivate.m (1.5),
+	  matlab/diffusion_init.m (1.22), matlab/diffusion_update.m (1.31),
+	  matlab/disproot.m (1.3), matlab/efluct0_1.m (1.7),
+	  matlab/efluct1.m (1.6), matlab/efluct10.m (1.6),
+	  matlab/efluct_grade_init.m (1.5), matlab/efluct_init.m (1.8),
+	  matlab/egauss.m (1.12), matlab/egauss_init.m (1.12),
+	  matlab/ekbeam.m (1.6), matlab/initial.m (1.5), matlab/integrate.m
+	  (1.5), matlab/inv_elliptke.m (1.2), matlab/is4096.m (1.4),
+	  matlab/linearwaves.m (1.37), matlab/linearwaves1.m (1.11),
+	  matlab/linearwaves2.m (1.3), matlab/linwaves4096.m (1.7),
+	  matlab/maxwell.m (1.16), matlab/maxwell_param_init.m (1.9),
+	  matlab/movie_zakharov.m (1.3), matlab/newton_raphson_ia.m (1.10),
+	  matlab/newton_raphson_l.m (1.8), matlab/nyesub.m (1.3),
+	  matlab/nyisub.m (1.3), matlab/ode1.m (1.3), matlab/ode1a.m (1.3),
+	  matlab/ode1symb.m (1.2), matlab/ode2symb.m (1.3),
+	  matlab/plot_all_zakharov.m (1.7), matlab/plot_zakharov.m (1.13),
+	  matlab/plotekbeam.m (1.6), matlab/plotis.m (1.8),
+	  matlab/plotisE.m (1.18), matlab/plotisn.m (1.22),
+	  matlab/readmfile.m (1.2), matlab/runlw.m (1.4), matlab/runlw12.m
+	  (1.2), matlab/runode1.m (1.5), matlab/runsde0.m (1.6),
+	  matlab/sde0.m (1.16), matlab/sde1.m (1.30), matlab/sde2.m (1.11),
+	  matlab/sde234test.m (1.3), matlab/sde3.m (1.15), matlab/sde4.m
+	  (1.10), matlab/sde5.m (1.23), matlab/sde6.m (1.19),
+	  matlab/soliton_init.m (1.5), matlab/startup.m (1.5),
+	  matlab/stint.m (1.2), matlab/test_cerenkov_diffusion.m (1.15),
+	  matlab/testdensfluct.m (1.6), matlab/testfft.m (1.3),
+	  matlab/teststint.m (1.3), matlab/tfaddpath.m (1.3),
+	  matlab/tfanalysis.m (1.4), matlab/tfluct_init.m (1.3),
+	  matlab/thermal_fluctuations_init.m (1.19), matlab/tst.m (1.3),
+	  matlab/view_zakharov.m (1.9), matlab/zak0.m (1.15), matlab/zak1.m
+	  (1.17), matlab/zak2.m (1.10), matlab/zak3.m (1.8), matlab/zak4.m
+	  (1.2), matlab/zak5.m (1.2), matlab/zakharov.m (1.24),
+	  matlab/zakharov_NPH.m (1.6), matlab/zakharov_NPHs.m (1.4),
+	  matlab/zakharov_analytic.m (1.9), matlab/zakharov_analytic_inf.m
+	  (1.9), matlab/zakharov_epsilon.m (1.6),
+	  matlab/zakharov_epsilons.m (1.2), matlab/zakharov_inf.m (1.9),
+	  matlab/zakharov_init.m (1.32), matlab/zakharov_init_inf.m (1.10),
+	  matlab/zakharov_par_parsing.m (1.6), matlab/zakharov_sources.m
+	  (1.13), matlab/zakharov_time_integrate.m (1.21), matlab/zakp.m
+	  (1.9):
+	Updated header information.
+
+2011-03-26  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Fftw.cpp (1.13), tests/Run.sh (1.2), tests/Zakharov.cpp
+	  (1.24), tests/egauss.sh (1.2), tests/runE0.sh (1.2),
+	  tests/runErms.sh (1.2), tests/runL.sh (1.2), tests/runk0.sh
+	  (1.2):
+	Updated header information.
+
+2011-03-26  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* update-cl.sh (1.4), src/SIconsts.cpp (1.10), src/SIconsts.h
+	  (1.6), src/default-mode.cpp (1.31), src/default-mode.h (1.26),
+	  src/density-fluct.cpp (1.10), src/density-fluct.h (1.4),
+	  src/density-parab.cpp (1.4), src/density-parab.h (1.3),
+	  src/diagnostics.cpp (1.85), src/diagnostics.h (1.66),
+	  src/efluct.cpp (1.31), src/efluct.h (1.23), src/egauss.cpp
+	  (1.65), src/egauss.h (1.26), src/mapper.cpp (1.117), src/mapper.h
+	  (1.67), src/modes-factory.h (1.6), src/range-spec.h (1.2),
+	  src/solitons.cpp (1.48), src/solitons.h (1.27), src/spectra.cpp
+	  (1.47), src/spectra.h (1.65), src/thermal-fluct.cpp (1.40),
+	  src/thermal-fluct.h (1.22), src/time-integrate-classic.cpp (1.2),
+	  src/time-integrate-fixed-E.cpp (1.2),
+	  src/time-integrate-fixed-n.cpp (1.3),
+	  src/time-integrate-linear.cpp (1.2), src/time-integrate-pump.cpp
+	  (1.2), src/zakharov-defs.h (1.54), src/zakharov.cpp (1.226),
+	  src/zakharov.h (1.156):
+	Updated header information.
+
+2011-03-25  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/time-integrate-fixed-n.cpp (1.2):
+	Commented out code relative to density fluctuation integration.
+
+2011-03-25  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-fluct.cpp (1.9):
+	Added relevant parameters to Matlab output file.
+
+2011-03-25  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-parab.cpp (1.3):
+	Fixed normalisation to half-width dl/2 so that K0 is compatible with
+	Zaslavsky and Ergun definitions.
+	Added new diagnostic file densparab.m with parameters.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.224):
+	Removed commented code for the default time integrator.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.82):
+	Bundled a new minor version 1.11.0.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.223):
+	Added support to handle the time integrators as an array of member
+	functions.
+	Renamed imode as init_mode for clarity and added support to parse the time
+	integration mode intg_mode.
+	Moved timeIntegrate() and timeIntegratePump() members into individual
+	files.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/linwaves4096.conf (1.5), share/linwaves4096_2.conf (1.4),
+	  tests/linwaves.sh (1.2), tests/linwaves2.sh (1.2):
+	Replaced call to LinearWave program by Zakharov and adjusted parameters for
+	integrator in the configuration files.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/beam.conf (1.22), share/diffusion1_4096.conf (1.7),
+	  share/efluct0_1.conf (1.3), share/efluct0_5.conf (1.3),
+	  share/efluct1.conf (1.3), share/efluct10.conf (1.3),
+	  share/egauss1200.conf (1.5), share/egauss2400.conf (1.4),
+	  share/egauss600.conf (1.4), share/egs2001.conf (1.2),
+	  share/ekbeam.conf (1.5), share/grl_eduard.conf (1.4),
+	  share/hanssen1992IIfig14-17.conf (1.6),
+	  share/hanssen1992IIfig20b.conf (1.5),
+	  share/hanssen1992Ifig10-13.conf (1.3),
+	  share/hanssen1992Ifig2-5.conf (1.9),
+	  share/hanssen1992Ifig20a.conf (1.3),
+	  share/hanssen1992Ifig6-9.conf (1.5), share/is4096.conf (1.5),
+	  share/is4096i.conf (1.8), share/linwaves4096.conf (1.4),
+	  share/linwaves4096_2.conf (1.3), share/maxwell1024.conf (1.2),
+	  share/maxwell1_4096.conf (1.14), share/maxwell2_4096.conf (1.6),
+	  share/maxwell4096.conf (1.3), share/maxwell64.conf (1.5),
+	  share/payne1984.conf (1.5), share/payne_et_al_1989_fig2_1200.conf
+	  (1.7), share/payne_et_al_1989_fig2_2400.conf (1.7),
+	  share/payne_et_al_1989_fig2_600.conf (1.5),
+	  share/payne_et_al_1989_fig3.conf (1.5),
+	  share/payne_et_al_1989_fig4.conf (1.3),
+	  share/payne_et_al_1989_fig5.conf (1.3), share/pump.conf (1.4),
+	  share/shen_nicholson_1987_fig12.conf (1.10),
+	  share/shen_nicholson_1987_fig4.conf (1.10),
+	  share/shen_nicholson_1987_fig8.conf (1.10):
+	Updated configuration files mode->init_mode, seed->mseed, amui->mi.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.h (1.153):
+	Added support to handle the time integrators as an array of member
+	functions.
+	Renamed imode as init_mode for clarity and added support to parse the time
+	integration mode intg_mode.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* lib/Makefile.am (1.7), src/Makefile.am (1.31):
+	Updated to handle the new files for the time integrators.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/time-integrate-classic.cpp (1.1),
+	  src/time-integrate-fixed-E.cpp (1.1),
+	  src/time-integrate-fixed-n.cpp (1.1),
+	  src/time-integrate-linear.cpp (1.1), src/time-integrate-pump.cpp
+	  (1.1):
+	Set of files containing a specific time integrator each.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/linearwaves.cpp (1.37[DEAD]), src/linearwaves.h (1.36[DEAD]):
+	Moved time integrator member function as a member function in the
+	ZakharovSolver class (time-integration-linear.cpp).
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Makefile.am (1.9):
+	Removed LinearWaves as a built target.
+
+2011-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/LinearWaves.cpp (1.10[DEAD]):
+	Removed as a linear time integrator is to be integrated in the Zakharov
+	code itself.
+
+2011-03-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/spectra.h (1.64):
+	Astyle formatted.
+
+2011-03-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-parab.cpp (1.2), src/density-parab.h (1.2):
+	Added width parameter to limit the width of the parabola and assume
+	constant density outside so that integrated density is zero i.e. n(k=0)=0.
+
+2011-03-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-fluct.cpp (1.8):
+	Changed operator+ followed by assigment to single compound-assignment
+	operator for nj and nk.
+
+2011-03-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.81):
+	Bundled a new minor version 1.10.0.
+
+2011-03-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.84), src/diagnostics.h (1.65),
+	  src/spectra.cpp (1.46), src/spectra.h (1.63):
+	Updated typedef'ed RangeSpec to template class RangeSpec<>.
+	Added diagnostic for the (k,f)-spectrum of electric field in a similar way
+	to plasma lines and ion lines.
+
+2011-03-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/Makefile.am (1.30):
+	Added range-spec.h in the distro.
+
+2011-03-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.53):
+	Updated typedef'ed RangeSpec to template class RangeSpec<>.
+
+2011-03-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/range-spec.h (1.1):
+	New class for improved handling of range specs.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.52):
+	Updated email address and copyright years.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.222):
+	Minor fixes in the reporting.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.80):
+	Bundled a new minor version 1.9.0.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-fluct.cpp (1.7), src/density-fluct.h (1.3),
+	  src/egauss.cpp (1.64):
+	Updated to account new split RNGs for electric field and density
+	fluctuation initialisation of default mode.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/default-mode.cpp (1.30), src/default-mode.h (1.25):
+	Split RNGs for electric field and density fluctuation initialisation of
+	default mode.
+	Renamed seed to mseed to avoid clash with stochastic drive seeds.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/efluct.cpp (1.30):
+	Astyle formatted.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.221), src/zakharov.h (1.152):
+	Split RNG for electric field and density fluctuations stochastic drives.
+	Introduced vector (with 2 elements) to store the seeds for the two drives.
+	Improved reporting for ZakharovSolver class.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/spectra.cpp (1.45):
+	Cosmetic change.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/thermal-fluct.cpp (1.39), src/thermal-fluct.h (1.21),
+	  src/egauss.h (1.25):
+	Astyle formatted.
+
+2011-03-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/SIconsts.h (1.5), src/diagnostics.cpp (1.83),
+	  src/diagnostics.h (1.64), src/spectra.cpp (1.44), src/spectra.h
+	  (1.62), src/solitons.cpp (1.47), src/solitons.h (1.26),
+	  src/efluct.h (1.22):
+	Astyle formatted.
+
+2011-03-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.79):
+	Bundled a new minor version 1.8.0.
+
+2011-03-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/linearwaves.cpp (1.36), src/linearwaves.h (1.35),
+	  src/modes-factory.h (1.5), src/zakharov.cpp (1.220),
+	  src/zakharov.h (1.151):
+	Added support for new mode parabolic density.
+	Added log of issued command in log by call to Parser::printCmd().
+
+2011-03-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* lib/Makefile.am (1.6), src/Makefile.am (1.29):
+	Updated to account for the new parabolic density mode.
+
+2011-03-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-parab.cpp (1.1), src/density-parab.h (1.1):
+	New initialisation mode for parabolic density as described in Ergun et
+	al. 2008, PRL.
+
+2011-02-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-fluct.cpp (1.6):
+	Fixed default parameter checking to handle help properly.
+
+2011-01-31  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/spectra.h (1.61):
+	Fixed 'end' variable to the last element of the array and not the number of
+	elements.
+
+2011-01-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.51):
+	Small fix in function checkNaN (added returned default value of 0).
+
+2010-12-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/readmfile.m (1.1):
+	Small utility function to read variable initialised by an mfile into
+	a structure.
+
+2010-12-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.78):
+	Bundled a new minor version 1.7.1.
+
+2010-12-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.116), src/mapper.h (1.66):
+	Added time-asymptotic energy in the electron beam instability as well as
+	cold beam approximation.
+	Added some primary plasma parameters in the matlab file phys.m.
+
+2010-12-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.77):
+	Bundled a new minor version 1.7.0.
+
+2010-12-25  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/default-mode.cpp (1.29), src/default-mode.h (1.24),
+	  src/density-fluct.cpp (1.5), src/linearwaves.h (1.34),
+	  src/zakharov.h (1.150):
+	Changed source_nk and source_Ek from Real to Complex to allow phase
+	difference between source modes.
+
+2010-12-25  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-fluct.cpp (1.4), src/density-fluct.h (1.2):
+	Fixed minor bug to find the maximum absolute value of density field
+	fluctuations.
+	Changed the parametrisation from central wavelength (l0) and wavelength
+	span (dl) into central and minimal wavelength (l0 and lm).
+	Fixed variable name dnOvern0 into dn as it should and assign the variable
+	dnOverne the real value of dn/ne.
+
+2010-12-25  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.h (1.65):
+	Added query method for electron density getDensity().
+
+2010-12-25  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testdensfluct.m (1.3):
+	Changed the parametrisation from dl to lm.
+
+2010-12-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testdensfluct.m (1.2):
+	More work with the parametrisation of dl.
+
+2010-12-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testdensfluct.m (1.1):
+	Added test function for random density fluctuations parametrisation and
+	computation.
+
+2010-12-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/startup.m (1.4):
+	Added license text.
+
+2010-12-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/startup.m (1.3):
+	Removed invalid path to stats toolbox.
+
+2010-12-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.76):
+	Bundled patch fixed version 1.6.1.
+
+2010-12-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.219):
+	Replaced local logs ostream by use of the private member.
+
+2010-12-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.h (1.149):
+	Cosmetic change.
+
+2010-12-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.h (1.148):
+	Added private member logs for the logfile stream.
+
+2010-12-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.218):
+	Added code to parametrise a switch to Ladau damping based on the value
+	of Wtot.
+
+2010-12-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.h (1.147):
+	Added variables to parametrise a switch to Ladau damping based on the value
+	of Wtot.
+
+2010-12-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.217):
+	Fixed bug of unallocated vector nue_t triffered when no damping on the
+	electric field.
+	Added structure to print out simulation time.
+
+2010-12-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.h (1.146):
+	Fixed bug of unallocated vector nue_t triffered when no damping on the
+	electric field.
+
+2010-12-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.216):
+	Fixed switch th thermal to be run only once.
+
+2010-12-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.215):
+	Fixed bug in the reporting of the switch to thermal damping.
+
+2010-12-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.75):
+	Updated to version 1.6.0 with parametrisation for switching to thermal
+	damping for the electric field.
+
+2010-12-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.214):
+	Fixed bug (lDecay_t non allocated).
+
+2010-12-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.213), src/zakharov.h (1.144):
+	Added code to switch beam or drive and set up a thermal damping level for
+	the electric field.
+
+2010-12-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-fluct.cpp (1.3):
+	Added reminder to check code for fluctuation spectra calculation.
+
+2010-11-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.74):
+	Updated email address to gmail address.
+
+2010-11-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/Robinson92.m (1.7):
+	Updated integration time in case 7.
+
+2010-11-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.29):
+	Cosmetic changes in textual diagnostics.
+
+2010-11-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/density-fluct.cpp (1.2):
+	Supersed source_nk initialisation in initEndn method by the real part of
+	densfluctk.
+
+2010-11-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.115):
+	Added a commented expression for diffusion coefficients diffusionCoeff.
+
+2010-06-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.28):
+	Added a switch for the method (Euler-Maruyama or exact from Gillespie, 1996).
+
+2010-02-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.212):
+	Initialise flag pump in default constructor.
+
+2010-01-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* lib/Makefile.am (1.5), src/Makefile.am (1.28),
+	  src/density-fluct.cpp (1.1), src/density-fluct.h (1.1),
+	  src/modes-factory.h (1.4), src/zakharov.cpp (1.211),
+	  src/zakharov.h (1.143):
+	Added new initial mode density fluctuation with a Gaussian spectral
+	distribution of density. This new mode is relevant for solar wind studies.
+
+2010-01-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.114):
+	Commented storing order of wavenumber arrays.
+
+2009-10-12  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/doxygen/Doxyfile.in (1.2):
+	Updated doxygen configuration input file to version 1.6.1.
+
+2009-06-29  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.73):
+	Updated to version 1.5.2.
+
+2009-06-29  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.72):
+	Added call to set up directory `m4' as an additional local Autoconf macro
+	directory.
+
+2008-10-30  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.h (1.142):
+	Changed rng member to use sharedState as the one in InitMode class.
+
+2008-10-30  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/egauss.cpp (1.63):
+	Use protected member rng.
+
+2008-10-30  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/default-mode.cpp (1.28), src/default-mode.h (1.23):
+	Make rng a protected member.
+
+2008-10-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.h (1.141):
+	Specified template arguments for bliz IRNG (MT and independent state).
+
+2008-07-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.113):
+	Initialise to zero all necessary variables in member function wofz().
+
+2008-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.70):
+	Updated to version 1.5.1.
+
+2008-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.69):
+	Removed unecessary -lm test.
+
+2008-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.68):
+	Removed unecessary program and other C tests.
+	Simplified header tests with new macros.
+
+2008-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Fftw.cpp (1.12):
+	Removed cpp macros to test whether C standard headers in std namespace.
+
+2008-05-29  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/linearwaves.cpp (1.35), src/mapper.cpp (1.112),
+	  src/zakharov.cpp (1.210):
+	Moved using blitz::tensor statements within the functions where used.
+
+2008-05-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.209):
+	Added diagnistics for R and W.
+	Fixed calculation of R for accounting growth rate.
+
+2008-05-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.81), src/diagnostics.h (1.63):
+	Added diagnostics for R and W as function of time with same timespec as NPH.
+
+2008-05-01  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.208):
+	Added Stimulated Electromagnetic Emission diagnostic when running without
+	pump.
+
+2008-05-01  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/spectra.h (1.60):
+	Removed debugging output.
+
+2008-05-01  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.207), src/zakharov.h (1.140):
+	Integrated support for Stimulated Electromagnetic Emission diagnostic.
+
+2008-05-01  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.49):
+	Fixed insertion operator for RangeSpec class.
+
+2008-05-01  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.80), src/diagnostics.h (1.62):
+	Added handling of Stimulated Electromagnetic Emission diagnostic.
+	Fixed argument list of init1dField member for consistency for similar
+	members with higher dimemsions.
+
+2008-05-01  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/spectra.cpp (1.42), src/spectra.h (1.59):
+	Added new kSpectraConf member to Spectra class. This new member (see) is
+	to calculate the frequency resolved spectra of the k=0 component of (n_kE_k)
+	in order to estimate stimulated electromagnetic emission.
+	Fixed class rangeStatus to handle correctly output of singleton.
+
+2008-04-29  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.206):
+	More cosmetic changes.
+
+2008-04-29  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.205):
+	Cosmetic changes.
+
+2008-04-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.48):
+	Arguments passed by reference in global function integrate1d().
+
+2008-04-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Zakharov.cpp (1.23):
+	Set defaultPrecision to 7.
+
+2008-04-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.204), src/zakharov.h (1.139):
+	Recalculate initial configuration space fields Ej, nj and dnj after zero-
+	padding.
+	Fixed Ej2 estimate in pump case.
+	Added member function calculateW().
+
+2008-04-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.111):
+	Astylised.
+
+2008-04-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.110):
+	Commented member function getN2Wconstant().
+
+2008-04-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.109), src/mapper.h (1.64):
+	Added member function getN2Wconstant().
+
+2008-04-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.67):
+	Removed option to enable thread safety Blitz since it is now included in
+	the AC_CHECK_BLITZ macro.
+
+2008-04-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.108), src/mapper.h (1.63):
+	Added member kpump wave number of the primary decay.
+
+2008-04-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.201), src/zakharov.h (1.138):
+	Fixed member function printStatusInfo.
+
+2008-04-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/spectra.h (1.58):
+	Fixed stream insertion operator for RangeStatus.
+
+2008-04-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.107):
+	Removed all setprecision manipulator in debugging information.
+
+2008-04-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Zakharov.cpp (1.21):
+	Removed useless cout.width() statement since it set the width to only the
+	next insertion and width is reset to zero.
+
+2008-04-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.45):
+	Added inlined global function printOsStatus to query stream flags.
+
+2008-04-09  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.65):
+	Update to version 1.5.0 and tagged revision zakharov_1_5_0.
+
+2008-04-09  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.200):
+	Added time in printInfoStatus.
+
+2008-04-09  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/LinearWaves.cpp (1.9), tests/Zakharov.cpp (1.20):
+	Added default scientific format to std::cout.
+	Changed default width from 6 to 10.
+
+2008-04-09  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.198), src/zakharov.h (1.137):
+	Added new member RR and method calculateR to estimate the amount of
+	Langmuir wave energy dissipitated by collisions.
+	Added new method timeIntegratePump to time integrate Zakharov equations
+	with pump drive.
+	Restored timeIntegrate method without pump drive.
+	Fixed a bug for k=0 calculation of source terms when nui(0)=0 or nue(0)=0.
+
+2008-04-09  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.106), src/mapper.h (1.62):
+	Changed pump parameter to be parsed from pump frequency to pump frquency
+	mismatch to plasma frequency.
+	Added normalised pump parameters.
+	Added query methods for electron collision frequency.
+
+2008-04-07  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.h (1.136):
+	Added variable Eph for pump value at t+h.
+
+2008-04-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.197), src/zakharov.h (1.135):
+	Added new member Ep electric field pump value.
+
+2008-04-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Fftw.cpp (1.11):
+	Added output of spectral zero component B(0) and sum of configuration
+	samples sum(A).
+
+2008-04-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.196):
+	Changed diagnostic format to scientific.
+
+2008-04-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.104):
+	Fixed a cast to Complex in getPump() method.
+	Enhanced WARNING output.
+
+2008-03-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.195), src/zakharov.h (1.134):
+	Added new member rng (uniform random generator).
+
+2008-03-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/hanssen1992Ifig2-5.conf (1.1):
+	Parameters 1 in table I from Hanssen et al 1992
+
+2008-03-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.103):
+	Set dispersion relation root finding using derivative free method.
+
+2008-03-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.102):
+	Cosmetic changes on the << operator of the class.
+
+2008-03-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/pump.conf (1.2):
+	Fixed output filename.
+
+2008-03-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/pump.conf (1.1):
+	Config file for pump wave excitation.
+
+2008-03-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.194), src/zakharov.h (1.133):
+	Added support for pump wave drive.
+
+2008-03-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.101), src/mapper.h (1.61):
+	Added support for pump wave simulation.
+
+2008-03-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.100), src/mapper.h (1.60):
+	More fixes in root calculation of dispersion relation.
+	Be careful when using Halley approximation with derivative estimate and g++
+	optimisation flags.
+
+2008-02-29  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.99), src/mapper.h (1.59):
+	Added constness to methods that do not change state of object like queries.
+	Fixed method to calculate dW/dz.
+	Added method to calculate d^2W/dz^2
+	Added method to calculate 2nd order derivative of dispersion relation.
+	Added method to calculate root of dispersion relation without derivative.
+	Added alernative Halley algorithm to Newton method for calculate roots of
+	dispersion relation.
+
+2007-09-26  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.64):
+	Added option --enable-threadsafe to turn on Blitz thread-safety features
+	by defining the BZ_THREADSAFE macro.  If enabled, code will look for pthreads,
+	OpenMP thread support to implement mutex locking of sensitive variables.
+
+2007-07-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.98), src/mapper.h (1.58):
+	Added analytic calculation of dW/dz for the Newton-Raphson method and
+	frequency derivative of dispersion relation.
+	Removed unecessary Complex cast in dispersion relation calculation.
+
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.97):
+	Fixed structure of numerical calculation of complex Langmuir frequency as
+	calculation for ion-acoustic frequency/
+
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.96):
+	Added saved diagnostic of numerical calculation of complex ion-acoustic
+	frequency.
+
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/linearwaves.cpp (1.34), src/spectra.cpp (1.41), src/spectra.h
+	  (1.57), src/zakharov.cpp (1.193):
+	Removed using fourier::(i)fftshift statements.
+
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.79):
+	Cleaned member Diagnostics::savenE().
+
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.95):
+	Reworked the member mapper::getLangmuirDamping() in the same way as
+	mapper::getMaxwellianLangmuirDamping().
+
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.94):
+	Fixed fftshift and ifftshift calls with value argument.
+
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.93):
+	Reworked member getMaxwellianLangmuirDamping so that structure similar to
+	getSoundWaveDamping().
+
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.91):
+	Fixed ion-acoustic damping from Robinson 97, there is obviously a typo.
+
+2007-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.90):
+	Fixed returned value in member function mapper::initDiffusion().
+
+2007-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.89), src/mapper.h (1.57), src/thermal-fluct.cpp
+	  (1.38):
+	Split member mapper::getKSpectraThermalFluctuations(Array1dr &nk, Array1dr &Ek)
+	into two functions getnkFluctuationsLevel() and getEkFluctuationsLevel().
+
+2007-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/linearwaves.cpp (1.33), src/mapper.cpp (1.88), src/mapper.h
+	  (1.56), src/zakharov.cpp (1.192):
+	Changed void mapper::initDiffusion(Array1dr &) into a function.
+
+2007-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.191), src/zakharov.h (1.132):
+	Added basic plotting capabilities of Ej, nj, Ek and nk with PLplot.
+
+2007-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.87), src/mapper.h (1.55):
+	Added new member gnuplot to plot Fe in member updateDiffusion().
+
+2007-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.44):
+	Added header file for PLplot if supported.
+
+2007-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.63):
+	Added check for PLplot support.
+
+2007-07-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/linearwaves.cpp (1.32), src/mapper.cpp (1.86), src/mapper.h
+	  (1.54), src/zakharov.cpp (1.190):
+	Changed members void mapper::getMaxwellianLangmuirWavesDamping(Array1dr &)
+	and mapper::getLangmuirWavesDamping(Array1dr &) into functions.
+
+2007-07-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/linearwaves.cpp (1.31), src/mapper.cpp (1.85), src/mapper.h
+	  (1.53), src/zakharov.cpp (1.189):
+	Changed void mapper::getSoundWavesDamping(Array1dr &) into a function.
+	Cleaned the function and left three expressions to calculate damping.
+	Damping expression from Hanssen 92 seems to underestimate the damping while
+	the expression from Robinson 97 seems to overestimate it compared to
+	numerical evaluation.
+
+2007-07-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.78), src/mapper.cpp (1.84), src/mapper.h
+	  (1.52):
+	Changed void mapper::getDiffusionLangmuirWavesDamping(Array1dr &) into a function.
+
+2007-07-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.77), src/mapper.cpp (1.83), src/mapper.h
+	  (1.51):
+	Changed void mapper::getDiffusionElectronPdf(Array1dr &) into a function.
+
+2007-07-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.76), src/linearwaves.cpp (1.30),
+	  src/mapper.cpp (1.82), src/mapper.h (1.50), src/solitons.cpp
+	  (1.46), src/zakharov.cpp (1.188):
+	Changed void mapper::getNormalisedGridPoints(Array1dr &) into a function.
+
+2007-07-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.75), src/mapper.cpp (1.81), src/mapper.h
+	  (1.49):
+	Changed void mapper::getPhysicalGridPoints(Array1dr &) into a function.
+
+2007-07-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/egauss.cpp (1.62), src/linearwaves.cpp (1.29), src/mapper.cpp
+	  (1.80), src/mapper.h (1.48), src/solitons.cpp (1.45),
+	  src/thermal-fluct.cpp (1.37), src/zakharov.cpp (1.187):
+	Changed void mapper::getNormalisedWaveNumbers(Array1dr &) into a function.
+
+2007-07-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.74), src/mapper.cpp (1.79), src/mapper.h
+	  (1.47), src/spectra.h (1.56):
+	Changed void mapper::getPhysicalWaveNumbers(Array1dr &) into a function.
+
+2007-07-21  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.77), src/mapper.h (1.46):
+	Added members mass number mni, ion velocity vi and ion-acoustic velocity cs.
+
+2007-07-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.76):
+	Added comment.
+	Do not set to zero the source Ek for k=0.
+
+2007-07-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.186):
+	Added code to save decay coefficients into files.
+	Added source noise for k=0.
+
+2007-07-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/thermal-fluct.cpp (1.36):
+	Commented code to set to zero Ek and nk at k=0.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.75):
+	Fixed expression for ion-acoustic velocity.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.74):
+	Added code to save physical constants in phys.m and Maxwellian damping in
+	nuet.m
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.43):
+	Added template function of saveMatlab for scalar Real value.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/default-mode.cpp (1.27), src/default-mode.h (1.22),
+	  src/efluct.cpp (1.29), src/egauss.cpp (1.61),
+	  src/thermal-fluct.cpp (1.35):
+	Renamed variable for number of Fourier modes from n to N.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/linearwaves.h (1.33):
+	Added NK_STINT and EK_STINT macro definition.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.42):
+	Replaced macro M_PI by const value m_pi.
+	Removed macro definition of NK_STINT and EK_STINT.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.73), src/zakharov.cpp (1.185):
+	Replaced macro M_PI by const value m_pi.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/egauss.cpp (1.60):
+	Replaced macro M_PI by const value m_pi.
+	Initialise complex Gaussian noise for wavenumbers smaller than zero-padding.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/solitons.cpp (1.44):
+	Replaced macro M_PI by const value m_pi.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/default-mode.cpp (1.26), src/default-mode.h (1.21):
+	Added member zero-padding length M.
+	Initialise complex Gaussian noise for wavenumbers smaller than zero-padding.
+
+2007-07-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/SIconsts.cpp (1.9):
+	Replaced use of M_PI macro definition (from math.h header) by const double
+	variable m_pi.
+
+2007-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.184):
+	Added output of value for k with maximum growth rate.
+
+2007-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.183), src/zakharov.h (1.131):
+	Renamed some variables.
+	Cosmetic changes.
+	Added comments.
+
+2007-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.41):
+	Changed argument of complexExp to be const.
+
+2007-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.182), src/zakharov.h (1.130):
+	Cosmetic changes.
+
+2007-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.181), src/zakharov.h (1.129):
+	Added code to enable/disable optimal plan when using FFTW3.
+
+2007-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.180), src/zakharov.h (1.128):
+	Removed code for oversampled  Stratonovich integrals (NK_STINT>1 and
+	EK_STINT>1).
+
+2007-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.179):
+	Changed for readability the calculation of ct and st.
+	Added Matlab output for langmuirDecay.
+
+2007-07-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/diagnostics.cpp (1.73):
+	Added code to save n(k,t) and E(K,t) for wavenumbers where n and E are not
+	-zero padded.
+
+2007-07-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.178):
+	Cosmetic change for comments.
+
+2007-06-19  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.177):
+	Added code for exact numerical simulation algorithm for Ornstein-Uhlenbeck
+	process.
+
+2007-06-15  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/zakharov_sources.tex (1.45): Fixed convolution product operator in ZSE.
+
+2007-06-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.176), src/zakharov.h (1.127):
+	Changed passed parameters definition to reference to const type.
+
+2007-06-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/linwaves.tex (1.19):
+	Added exact formulation by Gillespie (1996).
+	Removed unecessary figures.
+
+2007-06-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/linwaves.m (1.17):
+	Adjusted parameters.
+
+2007-06-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde6.m (1.18), matlab/linearwaves.m (1.34):
+	Added exact scheme from Gillespie (1996).
+
+2007-06-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde5.m (1.22):
+	Added stochastic integration scheme from Gillespie (1996).
+
+2007-06-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.26):
+	Added exact formulation of Gillespie (1996).
+
+2007-06-07  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde5.m (1.21), matlab/sde6.m (1.17):
+	Cosmetic changes.
+
+2007-06-07  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.25):
+	More cosmetic changes.
+
+2007-06-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.24), matlab/sde5.m (1.20), matlab/sde6.m (1.16):
+	Changed precision of printed parameters.
+
+2007-06-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde6.m (1.14):
+	Improved information level and outplot plot.
+
+2007-06-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde5.m (1.18):
+	Improved information and plot output.
+
+2007-06-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.22):
+	Improved information and output plot.
+
+2007-06-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/linearwaves.m (1.33), matlab/linearwaves1.m (1.9):
+	Cosmetic changes.
+
+2007-06-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.21), matlab/sde5.m (1.17), matlab/sde6.m (1.13):
+	Cosmetic changes.
+
+2007-06-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/linearwaves.m (1.32), matlab/sde5.m (1.16), matlab/sde6.m
+	  (1.12), matlab/startup.m (1.1):
+	A lot of fixing and reshaping of the code!
+
+2007-06-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.20):
+	Cosmetic changes.
+
+2007-06-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.19):
+	More cleaning.
+	Added different implementations of scheme.
+
+2007-06-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde4.m (1.9):
+	Replaced *sde2 names into *sde4.
+
+2007-06-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde3.m (1.14):
+	Replaced *sde2 into *sde3.
+
+2007-06-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/sde1.m (1.18):
+	Cleaned and simplified the code.
+
+2007-05-30  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.40):
+	Modified argument to be passed by reference in function complexExp().
+
+2007-05-29  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.175):
+	Added code to set planner flag when using the FFT3 Fourier transform wrapper.
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* tests/Fftw.cpp (1.10):
+	Updated Fourier transform class definition.
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/mapper.cpp (1.72):
+	Fixed default value for member physical_units.
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.62):
+	Updated to version 1.4.1 and tagged revision zakharov_1_4_1
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/linearwaves.cpp (1.27), src/mapper.cpp (1.70),
+	  src/thermal-fluct.cpp (1.33), src/zakharov.cpp (1.173):
+	Added temporary subsampling Range variable isaved to use with saveMatlab().
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/default-mode.h (1.19), src/diagnostics.h (1.60),
+	  src/spectra.h (1.54), src/mapper.h (1.44):
+	Removed include "parser.h" statement since included in zakharov-defs.h.
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.172):
+	Astylized.
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov.cpp (1.171):
+	Fixed range limits with adjfn() when using saveMatlab().
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/zakharov-defs.h (1.38):
+	Added include "parser.h".
+	Added inlined function adjfn() to fix upper range limit.
+	Added inlined function checkNaN() to check complex arrays for NaN's and
+	throw a ClassException.
+	Astylized.
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/thermal-fluct.cpp (1.32):
+	Adjusted upper limit of range with adjfn() when calling saveMatlab().
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/shen_nicholson_1987/fig10.m (1.3),
+	  doc/shen_nicholson_1987/fig2.m (1.3),
+	  doc/shen_nicholson_1987/fig6.m (1.3):
+	Fixed minimum finding functions: foptions->optimset and fmin->fminbnd.
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/payne_et_al_1983/fig2.m (1.3):
+	Added arguments N and M to IFFT to follow the new API.
+
+2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* src/spectra.h (1.53):
+	Fixed a bug when resizing skf2 array.
+	Changed postincrement operator to preincrement ones.
+
+2006-08-28  Patrick Guio <patrick.guio@matnat.uio.no>
+
+	* ChangeLog (1.1), ChangeLog.0 (1.123), update-cl.sh (1.1):
+	Moved manually filled in ChangeLog to ChangeLog.0.
+	Added script to fill ChangeLog using cvs2cl.
+

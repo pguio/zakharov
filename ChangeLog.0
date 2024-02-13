@@ -1,0 +1,584 @@
+
+Mon Aug 21 14:40:01 CEST 2006  Patrick Guio <patrick.guio@matnat.uio.no>
+
+	* configure.ac:
+	Updated to autoconf 2.60.
+
+
+Thu Mar 16 12:20:21 CET 2006  Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* configure.ac: 
+	Updated C++ compilers list.
+	Added support for new ac_check for blitz, hdf's and fft's.
+
+	* diagnostics.cpp diagnostics.h: 
+	Temporary fix to new hdf-interface API.
+
+	* src/zakharov.cpp:
+	Added output of larger Langmuir growth rate.
+
+
+Mon Oct 10 16:13:10 CEST 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* doc/zakharov_sources.tex: Rewording and typos fixing.
+
+Tue Jul  5 18:03:11 CEST 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* src/diagnostics.cpp src/diagnostics.h: Propagated changes done on
+	the HDF interface.
+
+	* new tag: cvs tag -R zakharov_1_4_0
+
+
+Mon Jun 20 16:23:54 CEST 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* src/default-mode.cpp src/diagnostics.cpp src/egauss.cpp src/linearwaves.cpp
+	src/mapper.cpp src/solitons.cpp src/spectra.cpp src/zakharov.cpp:
+	Replaced post-increment operator i++ by pre-increment operator ++i for
+	integral and iterator types wherever possible as faster (from C++ FAQ).
+
+	* matlab/zakharov.m: Added explicit char cast to repmat().
+	* matlab/zakahrov_init.m: Added default excitation type to efluct.
+	* matlab/collisions.m: Added existence test of lhanssen.
+
+
+Thu May 12 19:25:17 CEST 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* src/mapper.cpp src/mapper.h: Added variable Gam to estimate 
+	\Gamma = (n_b/n_e)(\delta v_b/v_b).
+	Restrict calculation of zeros of dispersion relation to k's that are in use.
+	Print \tau_1/2 diagnostic (1/2 quasi linear time).
+
+Fri May  6 17:20:26 CEST 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* doc/zakharov_sources.tex: Fixed diffusion equation. Cosmetic change in 
+	finite difference expressions.
+	* src/mapper.cpp src/mapper.h: Added unactivated code for solving the
+	diffusion equation for only the suprathermal part.
+	Added parameters for the gnuplot time setting.
+
+
+Thu May  5 19:04:26 CEST 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* configure.ac lib/Makefile.am src/Makefile.am: Added support to
+	enable/disable gnuplot interface tool.
+	* doc/zakharov_sources.tex: Cosmetic change in diffusion expression.
+	* src/mapper.cpp src/mapper.h: Added code to calculate diffusion coefficient
+	in alternative way (D1) but not activated.
+	Added gnuplot simple gnuplot graphic diagnostic.
+	Modified epsilon from 1e-8 to 1e-6 in root finding.
+	Fixed diffusion coefficient to be (e/m)^2*L.
+	* src/mapper.cpp src/mapper.h: Added code to calculate time average of |Ek|^2
+	but not activated.
+	* src/mapper.cpp: Added display of fpe in Mapper::operator<<.
+	* configure.ac: Updated to version 1.3.0.
+
+	* new tag: cvs tag -R zakharov_1_3_0
+
+Tue Apr 19 12:58:29 CEST 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* doc/damping.tex doc/linwaves.tex doc/zakharov_sources.tex
+	doc/payne_et_al_1983/payne_1983.tex doc/shen_nicholson_1987/shen_1987.tex:
+	Modified date and revision fields in title.
+
+
+Mon Feb 14 10:26:35 CET 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* configure.ac: Added a first check for function sin in default library, 
+	if not successfull try then in -lm.
+
+Thu Feb 10 18:28:24 CET 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* src/mapper.cpp: Added exception throwing if no convergence achieved 
+	whitin a max number of iterations when solving for dispersion relation
+	root in member function getDispersionRelationRoot().
+
+Wed Feb  9 13:05:38 CET 2005 Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* configure.ac: Required automake 1.9. Added dist-bzip2.
+	* src/linearwaves.cpp src/zakharov.cpp: Bug fix. Added test whether 
+	diffusion is set to true before calling diagnostic saveDiffusion().
+
+Sat Feb  5 18:39:04 CET 2005  Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* src/modes-factory.h: Added second template parameter in 
+	ModesFactory<AncestorType> to fix the case where ClassIDKey is not the
+	default template parameter.  
+	Added a typedef for the type ModesFactory<AncestorType,ClassIDKey>.
+
+
+Thu Feb  3 17:33:09 CET 2005  Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* src/default-mode.cpp src/default-mode.h src/diagnostics.cpp src/diagnostics.h
+	src/efluct.cpp src/egauss.cpp src/linearwaves.cpp src/linearwaves.h src/mapper.cpp
+	src/solitons.cpp src/spectra.cpp src/thermal-fluct.cpp src/zakharov-defs.h
+	src/zakharov.cpp src/zakharov.h: Replaced char* type by std::string.
+	* src/modes-factory.h: New file. Factory for initialisation modes classes.
+	* src/default-mode.cpp src/efluct.cpp src/egauss.cpp src/linearwaves.cpp 
+	src/linearwaves.h src/solitons.cpp src/thermal-fluct.cpp src/zakharov.cpp:
+	Implemented the use of initialisation modes classes factory.
+
+
+Sun Jan 30 13:28:07 CET 2005  Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* tests/LinearWaves.cpp tests/Zakharov.cpp: Replaced catch of ParserException
+	class by ClassException.
+	* configure.ac: Updated required autoconf 2.59. Updated version to version 1.2. 
+	* new tag: cvs tag -R zakharov_1_2_1
+
+
+Sat Jan 29 20:03:12 CET 2005  Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* src/default-mode.h src/diagnostics.h src/mapper.h src/spectra.h: 
+	Removed unecessary include <classexception.h>.
+
+
+Fri Jan 28 17:33:37 CET 2005  Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* src/default-mode.cpp src/diagnostics.cpp src/efluct.cpp src/egauss.cpp
+	src/linearwaves.cpp src/mapper.cpp src/solitons.cpp src/spectra.cpp
+	src/zakharov.cpp: Replaced parseOptionInFileOnCmdLine calls to generic
+	parseOption member function.
+
+
+Tue Jan 18 17:00:38 CET 2005  Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* new version 1.2:
+	cvs tag -R -b Zakharov_branch_1_2 
+	cvs tag -R Zakharov_1_2
+
+Wed Dec 15 22:01:43 CET 2004  Patrick Guio <patrick.guio@bccs.uib.no>
+
+	* doc/doxygen/Doxyfile.in: New file.
+	* configure.ac: Added doxygen support. 
+	* src/default-mode.cpp src/default-mode.h src/diagnostics.cpp src/diagnostics.h
+	src/efluct.cpp src/egauss.cpp src/linearwaves.cpp src/linearwaves.h 
+	src/mapper.cpp solitons.cpp src/spectra.cpp src/spectra.h src/zakharov.cpp
+	src/zakharov.h:  Propagated refactoring changes in the fourier, hdf-interface 
+	and parser classes.
+
+
+Tue Sep 21 23:17:47 CEST 2004 Patrick Guio <patrick.guio@ii.uib.no>
+
+	* matlab/@sd/Makefile.am: Removed. 
+	* matlab/Makefile.am: Added dist target from matlab/@sd/Makefile.am.
+	* configure.ac: Removed building of matlab/@sd/Makefile.in.
+	* src/c++-tools: New directory containing utility codes moved from src.
+	* lib/Makefile.am src/Makefile.am tests/Makefile.am: Updated to take into
+	account the files moved in c++-tools.
+
+Tue Apr 27 09:05:53 CEST 2004 Patrick Guio <patrick.guio@fys.uio.no>
+
+	* doc/shen_nicholson_1987 share/shen_nicholson_1987_fig{4,8,12}.conf: Upgraded config
+	files and matlab scripts.
+	* src/mapper.cpp: Fixed diffusionCoeff.
+
+Mon Mar 22 08:53:50 CET 2004 Patrick Guio <patrick.guio@fys.uio.no>
+	* makelinks.sh.in: Updated to link as well m4 macros in m4 directory.
+	* configure.ac: Small cosmetic fixes.
+
+Fri Mar 19 17:33:59 CET 2004 Patrick Guio <patrick.guio@fys.uio.no>
+	* m4: New directory containing m4 macros files that replace acinclude.m4
+	* m4/ac_cxx_enable_64bits.m4 m4/ac_cxx_enable_debug.m4
+	m4/ac_cxx_enable_optimize.m4 m4/ac_cxx_enable_profile.m4
+	m4/ac_cxx_flags_preset.m4 m4/ac_cxx_lib_blitz.m4 m4/ac_env.m4
+	m4/ac_lib_dxml.m4 m4/ac_lib_fftw.m4 m4/ac_lib_fftw3.m4 m4/ac_lib_hdf4.m4
+	m4/ac_lib_mlib.m4: New Files.
+	* Makefile.am configure.ac: Updated to use the new m4 macros in m4 directory.
+
+Tue Mar 16 16:14:32 CET 2004 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.ac: Replaced help string with AS_STRING_HELP calls. Fixed
+	AC_INIT and AM_INIT_AUTOMAKE.
+
+Mon Mar 15 09:57:37 CET 2004 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.ac: Replaced echo by AC_MSG_NOTICE calls. Added support for
+	header configuration AC_CONFIG_HEADERS.
+	* src/zakharov-defs.h: Added support for header configuration.
+
+Fri Feb 27 11:02:01 CET 2004 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.ac: Added support for FFTW3 via fourier.h.
+
+Wed Jan 21 15:12:32 CET 2004 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.ac: Updated library check for HDF stuff.
+
+Fri Jul 11 11:31:11 MET DST 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/spectra.h: in kfSpectraConf::initialise() fixed a bug in the init of
+	the time vector that didnot account the postint.
+
+Wed Jul  9 12:11:27 CEST 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/spectra.h: Added time filtering before calculating the IS spectra.
+
+Fri Jun 13 17:14:53 CEST 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.ac: Replaced target SGI32/64 by SGI. Added --enable-64bit
+	for both CC and xlC.
+
+Tue May 27 17:42:36 CEST 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.ac: Added support for IBM/xlC.
+
+Tue May 20 17:07:15 CEST 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/default-mode.cpp src/default-mode.h src/diagnostics.cpp
+	src/diagnostics.h src/efluct.cpp src/efluct.h src/egauss.cpp src/egauss.h
+	src/linearwaves.cpp src/linearwaves.h src/mapper.cpp src/mapper.h
+	src/solitons.cpp src/solitons.h src/spectra.cpp src/spectra.h
+	src/zakharov-defs.h src/zakharov.cpp src/zakharov.h: Moved to stricter
+	ANSI C++ coding.
+
+Sat May  3 20:05:02 CEST 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/default-mode.cpp src/diagnostics.cpp src/mapper.cpp src/spectra.h:
+	Renamed title_header into header.
+	* src/linearwaves.{cpp,h} src/zakharov.{cpp,h}: Reorganised class
+	declaration.  Removed struct conf solver.
+
+Tue Apr  1 17:22:35 CEST 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.ac: Removed unecessary check of CC and CPP. Moved extra test
+	of CXX before libtool stuff.
+
+Mon Mar 31 14:49:40 CEST 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/diagnostics.cpp src/diagnostics.h: Adapted code to the "new"
+	hdf interface.
+	* src/default-mode.cpp src/default-mode.h src/diagnostics.cpp
+	src/diagnostics.h src/efluct.cpp src/efluct.h src/egauss.cpp src/egauss.h
+	src/mapper.h src/solitons.cpp src/solitons.h src/spectra.h
+	src/thermal-fluct.cpp src/thermal-fluct.h: Reorganised class declaration.
+	Moved some inlined functions from the header declaration file into the
+	definition file.
+	* src/diagnostics.cpp src/diagnostics.h src/linearwaves.cpp src/zakharov.cpp:
+	Changed some diagnostic class member function name.
+	* src/diagnostics.cpp src/diagnostics.h src/efluct.h src/egauss.h
+	src/linearwaves.cpp src/linearwaves.h src/mapper.cpp src/mapper.h
+	src/zakharov.cpp src/zakharov.h: Removed unecessary "os << ... ;" statements.
+
+
+Sun Mar  2 17:44:28 CET 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/default-mode.h src/diagnostics.h src/efluct.h src/egauss.h
+  src/linearwaves.h src/mapper.h src/solitons.h src/spectra.h 
+	src/thermal-fluct.h src/zakharov-defs.h src/zakharov.h: Removed unecessary
+	use of keyword inline in class declarations.
+
+Wed Feb 26 10:20:55 CET 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/collisions.h src/default-mode.cpp src/default-mode.h
+	src/diagnostics.cpp src/diagnostics.h src/efluct.cpp src/egauss.cpp
+	src/linearwaves.cpp src/linearwaves.h src/mapper.cpp src/mapper.h
+	src/solitons.cpp src/spectra.cpp src/spectra.h src/zakharov-defs.h
+	src/zakharov.cpp src/zakharov.h: Removed use of `using namespace'
+	directives. Added `using' directives or namespace specs where necessary.
+	* collisions.h: Removed file.
+	* src/default-mode.h src/diagnostics.h src/linearwaves.h src/mapper.h
+	src/spectra.h src/zakharov.h: Replaced where necessary use of
+	parser::title_header.
+
+Fri Feb  7 10:11:25 CET 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* tests/Makefile.am: Added `check' target.
+	* lib/Makefile.am tests/Makefile.am: Removed unecessary variable
+	declaration `LINK'
+
+Thu Feb  6 11:05:44 CET 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.ac: Modified path to Blitz include
+	* lib: New directory to build the libraries
+	* all Makefile.am: Modified in order to handle libraries in `lib'
+
+Thu Jan 30 15:49:14 CET 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.ac: New file renamed from configure.in
+	* COPYING INSTALL depcomp install-sh mkinstalldirs missing aclocal.m4
+	config.guess config.sub configure ltmain.sh: Removed from repository.
+	* Makefile.in doc/Makefile.in doc/payne_et_al_1983/Makefile.in
+	doc/payne_et_al_1989/Makefile.in doc/shen_nicholson_1987/Makefile.in
+	matlab/@sd/Makefile.in matlab/Makefile.in share/Makefile.in
+	src/Makefile.in tests/Makefile.in: Likewise. 
+
+Tue Jan  7 14:43:00 CET 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* makelinks.sh.in: new script file to update links to tools outside mudfas
+	* configure.in: added support to generate makelinks.sh from
+	makelinks.sh.in
+	* configure: regenerated by autoreconf 2.53
+	* src/linearwaves.cpp linearwaves.h src/zakharov.cpp src/zakharov.h: 
+	replaced NULL by 0
+	* src/diagnostics.cpp: replaced C-style cast into C++ static_cast
+
+Mon Jan  6 17:36:35 CET 2003 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.in: removed unecessary substitution of SUBDIRS
+	* Makefile.am: added SUBDIRS
+	* doc/payne_et_al_1983/Makefile.am doc/payne_et_al_1989/Makefile.am
+	doc/shen_nicholson_1987/Makefile.am matlab/@sd/Makefile.am
+	share/Makefile.am src/Makefile.am tests/Makefile.am: removed unecessary
+	SUBDIRS
+	* configure doc/payne_et_al_1983/Makefile.in doc/payne_et_al_1989/Makefile.in
+	doc/shen_nicholson_1987/Makefile.in matlab/@sd/Makefile.in
+	share/Makefile.in src/Makefile.in tests/Makefile.in: regenerated by
+	autoreconf 2.53
+	* src/default_mode.cpp src/thermal_fluct.cpp src/zakharov_defs.h 
+	src/default_mode.h src/thermal_fluct.h: files renamed replacing '_' into '-'
+	* tests/Fftw.cpp tests/LinearWaves.cpp tests/Zakharov.cpp: replaced
+	#include "..." into #include <...>
+	* src/SIconsts.cpp src/collisions.h src/default-mode.cpp
+	src/default-mode.h src/diagnostics.cpp src/diagnostics.h src/efluct.cpp
+	src/efluct.h src/egauss.cpp src/egauss.h src/linearwaves.cpp
+	src/linearwaves.h src/mapper.h src/mapper.cpp src/solitons.cpp
+	src/solitons.h src/spectra.cpp src/spectra.h src/thermal-fluct.cpp
+	src/thermal-fluct.h src/zakharov.cpp src/zakharov.h: likewise
+	* src/Makefile.am: replaced '_' into '-' where necessary
+	* src/Makefile.in: regenerated by autoreconf 2.53
+
+Sat Dec 21 16:23:38 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/spectra.h: reordered initialisation order of struct kfSpectraConf
+	* src/zakharov.cpp: removed unused variable Real h
+
+Mon Dec 16 17:18:18 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.in: added the AM_MAINTAINER_MODE automake macro to avoid
+	generating the rules to rebuild these out-of-date maintainer files by
+	default. To rebuild them run configure with the option
+	--enable-maintainer-mode
+	* aclocal.m4: regenerated by autoreconf 2.53
+	* configure: regenerated by autoreconf 2.53
+	* Makefile.in doc/Makefile.in doc/payne_et_al_1983/Makefile.in
+	doc/payne_et_al_1989/Makefile.in doc/shen_nicholson_1987/Makefile.in
+	matlab/Makefile.in matlab/@sd/Makefile.in share/Makefile.in
+	src/Makefile.in tests/Makefile.in: regenerated by autoreconf 2.53
+
+Fri Dec 13 14:36:39 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* aclocal.m4: regenerated using autoreconf 2.53
+
+Fri Sep 13 14:57:07 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.in: fixed a typo for icc compiler screen message
+	* configure: Rebuilt from configure.in using autoconf 2.53
+
+Tue Sep 10 15:57:41 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/zakharov_defs.h: modified saveMatlab to a template function to cope
+	with the problem of the type of variable mode
+
+Wed Jul 24 11:06:41 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.in: Removed occurences of -DBZ_DISABLE_XOPEN_SOURCE, this is
+	the default and changed to -DBZ_ENABLE_XOPEN_SOURCE for DECcxx6.2 and
+	DECcxx6.3 required for scoping of ilogb.
+	* configure: Rebuilt from configure.in using autoconf 2.53
+	* all Makefile.in: Rebuilt from Makefile.am using automake 1.6.2
+	* aclocal.m4: Rebuilt using aclocal 1.6.2
+
+Mon Jul 22 10:39:25 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/spectra.{cpp,h}: added a new parameter postint for IS spectra which
+	gives the possibility to post-integrate spectra 
+
+Fri Jul 19 16:49:12 MET DST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/zakharov_defs.h: added inlined function complexExp to avoid
+	BZ_HAVE_COMPLEX_MATH inside the code
+	* src/default_mode.cpp: rewritten the part to generate the random noise
+	using complexExp only
+	* src/egauss.cpp: likewise
+	* src/solitons.cpp: rewritten the part that use complex exponential 
+	* src/zakharov.cpp: separated computation into ip and im in order to
+	avoid the calculation over the zero-padded wave vectors
+	* src/linearwaves.cpp: likewise
+	* src/zakharov.cpp: added field logfile, changed extension to .log and log
+	the timimg as well  
+	* src/linearwaves.cpp: likewise
+	* src/linearwaves.h: added inlined function to calculate the complex
+	Gaussian noise, clean the fluctuation source generation  
+	* src/zakharov.h: likewise
+
+Thu Jul 18 18:04:01 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/zakharov.{h,cpp}: added better support for Ito/Stratonovich integral
+	in the fluctuation generation
+	* src/linearwaves.{h,cpp}: likewise
+	* src/zakharov_defs.h: likewise
+
+Fri Jul 12 12:04:35 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/spectra.{cpp,h}: added support to estimate IS spectra using all the
+	data available
+
+Wed Jul 10 18:53:12 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/mapper.cpp: fixed a bug in the expression of the the thermal
+	fluctuation of the electric field Ek
+	* src/spectra.cpp: fixed a bug in the normalisation of skf2 (nkf2, ukf2
+	and dkf2), now the grid size is used instead of the number of k's
+	considered for nk2 and Ek2.
+	* src/spectra.h: fixed a bug in Spectra::getKspecTindex() ispec replaced
+	by kspec
+
+Mon Jul  8 13:42:07 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/diagnostics.cpp: N = mapper.getGridSize () instead of size()
+
+Fri Jul  5 16:13:35 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/mapper.cpp: added advective term in the quasi lineaire diffusion
+	equation
+
+Thu Jul  4 18:53:27 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/zakharov_defs.h: added constant declaration
+	* src/spectra.cpp: fixed a bug in the normalisation of nk2 and Ek2, now
+	the grid size is used instead of the number of k's considered.
+	* src/mapper.{cpp,h}: added numerical calculation of the ion sound wave
+	damping by the Newton-Raphson method (zero finding of dispersion relation)
+	The analytic version is not so good for Te/Ti about 2
+
+Tue Jun  4 10:55:55 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/spectra.{h,cpp}: modification in the averaged k-spectra estimationa
+	averaged k-spectra are now saved as 2-dimensional array (k, t) where t
+	is defined by start:stride:end
+	* src/diagnostics.cpp: likewise
+	* src/zakharov.cpp: likewise
+	* src/linearwaves.cpp: likewise
+
+Fri May 24 10:00:50 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* tests/Zakhariv.cpp: removed unnecessary cerr.fflush() in my_new_handler
+	* tests/LinearWaves.cpp: likewise
+
+Thu May 23 11:57:05 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.in: added SGI support
+	* configure: regenerated with autoconf 2.53, automake 1.6.1, libtool 1.4.2
+	* tests/Zakharov.cpp: removed the ambiguity of set_new_handler by use of
+	the BZ_STD_SCOPE macro
+	* tests/LinearWaves.cpp: likewise
+	* src/mapper.h: added this-> to member template functions where necessary
+	for SGI CC 
+
+Wed May 22 13:03:44 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.in: regenerated by running the command autoupdate from
+	autoconf 2.53
+	* configure: regenerated by running the command autoreconf --force
+	--install with autoconf 2.53, automake 1.6.1, libtool 1.4.2
+	* every Makefile.in: likewise
+
+Wed May 22 12:51:46 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* new branch version 1.1 (command run: cvs tag -b Zakharov_1_1)
+
+Fri Apr 26 21:17:24 CEST 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/zakharov_defs.h: replaced int mode declaration ins saveMatlab by
+	ios_base::openmode
+
+Wed Mar 20 10:21:10 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/linearwaves.{h,cpp}: the sources are now complex stochastic Wiener
+	processes
+	* src/zakharov.{h,cpp}: likewise
+
+Thu Mar 14 17:02:06 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/linearwaves.{h,cpp}: a start to make the source correct using
+	stochastic differential equation principle
+	* src/zakharov.{h,cpp}: likewise
+	* src/mapper.{h,cpp}: new member function to calculate the Langmuir landau
+	damping for just the background population to be used for the source term
+
+Mon Mar 11 09:53:38 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* config.guess: update to (GNU libtool) 1.3c
+	* config.sub: likewise
+	* configure.in: added support for Intel C++ compiler icc
+
+Mon Feb 25 16:43:37 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+  * src,tests: cosmetic changes for function calls 
+
+Thu Feb 14 19:53:38 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src: a _lot_ of changes which would be too long to log....
+
+Fri Feb  1 17:31:46 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/mapper.{h,cpp}: new files
+	* src: total restructuring of the code started
+	* configure.in: rebuilt
+
+Fri Jan 25 16:06:35 CET 2002 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.in: adjusted profiling flags for aCC
+
+Fri Dec 14 17:49:30 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src, tests: cosmetics changes for the output of parameters
+	* configure.in: systemize the use of LDFLAGS and lIBS
+
+Tue Dec 11 14:48:12 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/hdf_interface.{h,cpp}: added new field dimtype in the class
+	Hdf::Variable
+	* src/*.cpp, tests/*.cpp: updated InsertOption to include the argument of
+	type Any consisting of the default value for the variable to parsed.
+
+Fri Nov 30 21:59:36 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/*.{h,cpp}: removed member function ParseFile
+	and changed ParseOption to ParseOptioninFileonCmdLine which do the parsing
+	of a parameter file if specified first and on the command line
+	* src/*.{h,cpp}: removed parsing of --input|-i since
+	Parser class has been updated so that it contains parsing of it by default
+
+Tue Oct  9 18:44:28 CEST 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/egauss.cpp: fixed denormalisation problem with exp() expression
+	that caused a floating exception with fftw
+
+Thu Sep  6 12:02:48 CEST 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/zakharov.{h,cpp}: default value of coefficients physical/normalised
+	parameters set to 1.
+
+Mon Aug 13 16:45:19 CEST 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src: a lot of debugging for the electron diffusion in the phase space
+
+Wed Aug  8 16:34:55 CEST 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/collisions.{h,cpp}: added electron diffusion in the phase space
+
+Tue Aug  7 18:03:41 CEST 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/thermal_fluct.{h,cpp}: new files to include thermal sources
+	* src/zakharov.cpp: included source terms in the Zakharov system
+
+Wed Jun 13 16:32:58 CEST 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* new branch: version 1.0
+
+Sun Jun 10 17:46:06 CEST 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/hdf_interface.{cpp,h}: new files to separate the HDF interface from the
+	diagnostics
+	* src/zakharov.cpp: fixed a bug in the initialisation of the array ct and st
+
+Tue Jun  5 19:00:44 CEST 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/collisions.{h,cpp}: new files to calculate beam and Maxwellian
+	damping
+
+Mon May 28 14:31:24 CEST 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src, matlab: renamed judiciously *pump* to *efluct*
+
+Sat Mar 17 10:45:54 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* configure.in : added support to profiling via --enable-profile
+
+Fri Mar 16 15:30:33 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src: work done on the uniformisation of the parsing, especially the use
+	of augmented virtual member functions
+	* Changed version to 0.9
+	* Changed the optimization flag for DECcxx to -O3 -inline speed (-O4 
+	crashed compiler!)
+
+Mon Feb 26 12:48:10 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* fixed a bug in fftshift and ifftshift
+
+Fri Feb 16 11:05:41 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* cleaned up configure.in
+	* rerun autoconf
+
+Fri Feb  9 16:07:28 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/zakharov.cpp, src/zakharov.h: added support to calculate IS spectra
+
+Wed Feb  7 18:04:09 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* src/pump.cpp: fixed a bug in the normalisation of Ek at initialisation
+	* reorganised doc directory structure
+	* added support for doxygen
+
+Tue Feb  6 18:05:54 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* added src/pump.cpp, src/pump.h: initialiase E and n according to Shen
+	and Nicholson, 1987
+	* src/diagnostics.cpp: added diagnostics of abs(Ek) and abs(nk)
+
+Wed Jan 31 16:00:16 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* added diagnostics class in src/diagnostics.{h,cpp}
+
+Tue Jan 30 22:47:06 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* time integrator works properly
+	* added calculation of N, P and H
+
+Mon Jan 29 17:55:29 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* Created class solitons 
+	* work on the argument parsing for the two classes
+
+Sun Jan 28 21:43:06 CET 2001 Patrick Guio <patrick.guio@fys.uio.no>
+	* C++/Blitz/fftw version started developped
+
+Tue Sep 26 16:14:55 CEST 2000 <patrick.guio@fys.uio.no>
+	* Rerun automake/autoconf
+
+2000-08-17 Patrick Guio <patrick@phys.uit.no>
+	* Fixed a bug in the expression for the time derivative of the density n
+	calculated in the matlab directory.
+	* A lot of fixes in the directory payne_1983.
+	* Added flags for display and save separatly (display, mdisplay and save,
+	msave).
+
+2000-08-25 Patrick Guio <patrick@phys.uit.no>
+	* Added parameter D to control the distance D the soliton should move
+	* Fixes in the directory payne_1983
