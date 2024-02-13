@@ -1,0 +1,35 @@
+#!/bin/bash
+
+####
+#### Patrick Dell precision f31
+####
+
+#with_blitz=/usr/local/blitz3
+with_blitz=/usr/local/blitz1/include,/usr/local/blitz1/lib64
+
+with_fftw3=yes
+
+with_hdf4=/usr/include/hdf,/usr/lib64/hdf 
+enable_hdf5_output=yes
+# version 1.10.x
+with_hdf5=/usr/include,/usr/lib64
+# version 1.8.x
+#with_hdf5=/opt/hdf5-1.8.21/include,/opt/hdf5-1.8.21/lib
+
+with_plplot=/usr/include/plplot,/usr/lib64
+PLPLOT_CXXLIBS=-lplplotcxx
+
+enable_cxx_flags_preset=no
+
+#enable_threadsafe_blitz=no
+
+CXX=g++
+
+#CXXFLAGS="-w -O"
+CXXFLAGS="-std=c++11 -Wall -O3 -march=native -funroll-loops"
+#CXXFLAGS="-std=c++11 -Wall -O3 -march=native -funroll-loops -DH5_USE_18_API"
+#CXXFLAGS="-std=c++11 -Wall -O3 -march=native -funroll-loops -DH5_USE_16_API"
+
+AR=ar
+
+echo configuring for jazz3

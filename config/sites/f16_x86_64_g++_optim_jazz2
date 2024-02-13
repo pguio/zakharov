@@ -1,0 +1,28 @@
+#!/bin/bash
+
+####
+#### Patrick Dell precision m4500 F14
+####
+
+# old blitz
+#with_blitz=/usr/local/blitz1
+# new blitz
+with_blitz=/usr/local/blitz2
+
+with_fftw3=
+
+with_hdf4=/usr/include/hdf,/usr/lib64/hdf 
+
+with_plplot=/usr/include/plplot,/usr/lib64
+
+enable_cxx_flags_preset=no
+
+enable_threadsafe_blitz=
+
+CXX=g++
+
+CXXFLAGS="-O3 -funroll-loops -fstrict-aliasing -fomit-frame-pointer -ffast-math"
+
+AR=xiar
+
+echo configuring for jazz2

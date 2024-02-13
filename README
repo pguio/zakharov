@@ -1,0 +1,34 @@
+
+														Zakharov Version 0.9
+																August 2000
+
+
+
+Introduction
+============
+This package is a solver for the zakharov equation in one-dimension and for
+periodic solutions as described in Payne (1983).
+
+
+License:
+========
+Zakharov is distributed under the terms of the GNU General Public License.
+
+
+
+Content:
+========
+The directory matlab contains a Matlab version of the solver. The names
+containing the expression _inf is for an infinite domain (use of sech
+instead of the Jacobi elliptic function dn).
+The directory payne_1983 contains functions to create the figures and
+tables of Payne, 1983. In order to create the tables and the figures run
+'testall' from Matlab. Thereafter compile the file payne_1983.tex with
+latex to generate a document with tables and figures included.
+
+
+Bibligraphy:
+============
+G. L. Payne, D. R. Nicholson and R. M. Downie, "Numerical solution of the
+Zakharov equations", J. Comp. Phys, 50, 482-498, 1983.
+

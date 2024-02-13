@@ -1,0 +1,17 @@
+-*- outline -*-
+
+Things it might be nice to do someday.  I haven't evaluated all of
+these suggestions... their presence here doesn't imply my endorsement.
+-pg
+
+* Add a term to account Joule heating nonlinearity in the slow density 
+  fluctuation equation (see Stenflo and Shukla, Parametric instabilities and
+	nucleation of coupled Langmuir and acoustic waves in a weakly-ionized
+	plasma, Astrophysics and Space Science, 172, 317-320, 1990)
+
+
+* Add a term to account electron temperature gradient in the fast electric
+  field equation (see Kofman et al., Heat flow effect on the plasma line
+	frequency, J. Geophys. Res., 98, 6079-6085, 1993)
+
+

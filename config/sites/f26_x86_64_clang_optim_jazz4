@@ -1,0 +1,28 @@
+#!/bin/bash
+
+####
+#### Patrick Dell precision f26
+####
+
+with_blitz=/usr/local/blitz3
+
+with_fftw3=
+
+with_hdf4=/usr/include/hdf,/usr/lib64/hdf 
+enable_hdf5_output=yes
+with_hdf5=/usr/include,/usr/lib64
+
+with_plplot=/usr/include/plplot,/usr/lib64
+PLPLOT_CXXLIBS=-lplplotcxx
+
+enable_cxx_flags_preset=no
+
+enable_threadsafe_blitz=
+
+CXX=clang++
+
+CXXFLAGS="-std=c++11 -w -O"
+
+AR=xiar
+
+echo configuring for jazz4

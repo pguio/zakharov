@@ -1,0 +1,805 @@
+%
+% $Id: zakharov_sources.tex,v 1.55 2011/03/31 18:48:28 patrick Exp $
+%
+% Copyright (c) 2000 Patrick Guio <patrick@phys.uit.no>
+%
+% All Rights Reserved.
+%
+% This program is free software; you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by the
+% Free Software Foundation; either version 2.  of the License, or (at your
+% option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+% Public License for more details.
+%
+
+\documentclass[10pt,a4paper]{article}
+\usepackage[latin1,utf8]{inputenc}
+\usepackage[empty]{fullpage}
+%\usepackage{a4wide}
+\usepackage{times}
+%\usepackage{mathpple}
+\usepackage{amsmath}
+\usepackage[italic]{esdiff}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{fancybox}
+\usepackage{natbib}
+
+\parindent 0cm
+
+\newcommand{\eq}[1]{Eq.~(\ref{#1})}
+\newcommand{\eqs}[2]{Eqs.~(\ref{#1}--\ref{#2})}
+
+\newlength{\mylength}
+
+\newenvironment{falign}%
+{\setlength{\fboxsep}{15pt}
+\setlength{\fboxrule}{0.5pt}
+\setlength{\mylength}{\textwidth}
+\addtolength{\mylength}{-2\fboxsep}
+\addtolength{\mylength}{-2\fboxrule}
+\Sbox
+\minipage{\mylength}%
+	\setlength{\abovedisplayskip}{-2\lineskip}
+	\setlength{\belowdisplayskip}{-2\lineskip}
+\align}%
+{\endalign\endminipage\endSbox
+\[\fbox{\TheSbox}\]}
+
+
+\def\matlab/{\textsc{Matlab}}
+
+
+%\def\tablesize{\footnotesize}
+\def\tablesize{\small}
+
+\def\knui{\sqrt{k^2{-}\nu_i^2}}
+\def\knui{\left(k^2{-}\nu_i^2\right)^\frac{1}{2}}
+
+\def\dn{\delta n}
+\def\dnk{\delta n_k}
+\def\dnj{\delta n_j}
+\def\dE{\delta E}
+\def\dEk{\delta E_k}
+\def\dEj{\delta E_j}
+
+\bibliographystyle{egs-ag}
+
+\title{One-dimensional periodic Zakharov solver with sources}
+\author{Patrick Guio}
+\date{\normalsize$ $Date: 2011/03/31 18:48:28 $ $,~ $ $Revision: 1.55 $ $}
+
+\begin{document}
+
+\maketitle
+
+\section{Zakharov equations}
+\begin{subequations}
+The Zakharov system of equations is written in physical SI units
+\begin{falign}
+\divg
+\left(i\diffp{}{t}+i\nu_e\times+\frac{3}{2}\omega_e\lambda_e^2\lapl\right)
+\vec{E} &= \divg\left(\frac{\omega_e}{2}\frac{\delta n}{\ne}\vec{E}\right),
+\label{eq:pzake}\\
+\left(\diffp[2]{}{t}+2\nu_i\times\diffp{}{t}-c_s^2\lapl\right)\delta n &=
+\frac{\epso}{4m_i}\lapl\left|\vec{E}\right|^2,
+\label{eq:pzakn}
+\end{falign}
+\end{subequations}
+where $\cross$ denotes the convolution product operator, $\omega_e=(n_ee^2/m_e\epso)^{1/2}$ 
+is the electron plasma frequency, $v_e=(\kB\Te/\me)^{1/2}$ the electron thermal velocity, 
+$\lambda_e=v_e/\omega_e$ the Debye length and $c_s$ the
+ion acoustic velocity related to $v_e$ through
+\begin{align*}
+c_s^2 = \frac{\eta m_e}{m_i}v_e^2, \qquad\text{where}\qquad
+\eta = \frac{\Te+3T_i}{\Te},
+\end{align*}
+and $\nu_e$, $\nu_i$ are the electron and ion linear momentum transfer
+collision frequencies respectively including kinetically determined linear
+Landau damping of Langmuir waves and ion-acoustic waves 
+\begin{align*}
+\nu_e = \frac{\nu_{ec}}{2}+\gamma_L, \qquad\text{and}\qquad
+\nu_i = \frac{\nu_{ic}}{2}+\gamma_{ia}.
+\end{align*}
+
+With the normalised variables
+\begin{align*}
+\tilde{t} &= \frac{t}{\tau},&
+\tilde{\vec{r}} &= \frac{\vec{r}}{\chi},&
+\tilde{n} &= \frac{n}{\nu},&
+\tilde{E} &= \frac{E}{\varepsilon}\\
+\tau &= \frac{3}{2}\frac{m_i}{\eta m_e}\frac{1}{\omega_e}, &
+\chi& = \frac{3}{2}\sqrt{\frac{m_i}{\eta m_e}} \lambda_e, &
+\nu &= \frac{4}{3}\frac{\eta m_e}{m_i}n_e, &
+\varepsilon &= \frac{4\eta}{\sqrt{3}}\sqrt{\frac{m_e}{m_i}}
+\sqrt{\frac{n_e\kB\Te}{\epso}}
+\end{align*}
+and scaling factors
+\begin{align*}
+\tilde{t} &= \left(\frac{2}{3}\frac{\eta m_e}{m_i}\omega_e\right)t, &
+\tilde{\vec{r}} &= \left(\frac{2}{3}\sqrt{\frac{\eta m_e}{m_i}}
+\frac{1}{\lambda_e}\right)\vec{r}, \\
+\tilde{n} &= \left(\frac{3}{4}\frac{m_i}{\eta m_e}\frac{1}{n_e}\right)
+\delta n, &
+\tilde{E} &= \left(\frac{\sqrt{3}}{4\eta}\sqrt{\frac{m_i}{m_e}}
+\sqrt{\frac{\epso}{n_e\kB\Te}}\right)E,
+\end{align*}
+the system of equations is rewritten in one-dimensional space
+\begin{align}
+\left(i\diffp{}{{\tilde{t}}}+i\tilde{\nu}_e\times+\diffp[2]{}{\tilde{x}}\right)
+\tilde{E} &= \tilde{n}\tilde{E}
+\label{eq:nzake}\\
+\left(\diffp[2]{}{\tilde{t}}+2\tilde{\nu}_i\times\diffp{}{{\tilde{t}}}-
+\diffp[2]{}{\tilde{x}}\right)\tilde{n} &=
+\diffp[2]{|\tilde{E}|^2}{\tilde{x}}
+\label{eq:nzakn}
+\end{align}
+
+
+\section{Pseudo spectral integration method}
+
+Assuming a one-dimensional periodic space, we take the space Fourier
+transform of the Zakharov system of equations and get
+\begin{align}
+\diff{E_k}{t}+\nu_eE_k+ik^2E_k &= -i\left(nE\right)_k
+\label{eq:zake}\\
+\diff[2]{n_k}{t}+2\nu_i\diff{n_k}{t}+k^2n_k &= -k^2\left|E\right|^2_k
+\label{eq:zakn}
+\end{align}
+
+\eqs{eq:zake}{eq:zakn} can be written in their integral form
+\begin{align}
+E_k(t) & = E_k(0)\exp\left(-(ik^2{+}\nu_e)t\right)-i\int_0^t
+\left(nE\right)_k\exp\left(-(ik^2{+}\nu_e)(t{-}s)\right)\dint{s},\\
+\begin{split}
+n_k(t) & = n_k(0)\exp(-\nu_it)\left(\cos\knui t+\nu_i\frac{\sin\knui t}{\knui}
+\right)+\\
+&\quad n_k^\prime(0)\exp(-\nu_it)
+\frac{\sin\knui t}{\knui}-
+\int_0^tk^2\left|E\right|^2_k\exp\left(-\nu_i(t{-}s)\right)
+\frac{\sin(\knui(t{-}s))}{\knui}\dint{s}.
+\end{split}
+\end{align}
+
+Using the trapezoidal method of integration
+\begin{align*}
+\int_0^hf(x)\dint{x}=h\left(\frac{1}{2}f(0)+\frac{1}{2}f(h)\right)+
+\mathcal{O}(h^3f^{\prime\prime}),
+\end{align*}
+$n_k$ can be integrated one iteration step $h$ ahead 
+\begin{falign}
+\begin{split}
+n_k(h) &= n_k(0)\exp(-\nu_ih)\left(\cos\knui h+
+\nu_i\frac{\sin\knui h}{\knui}\right)\\
+&\quad n_k^\prime(0)\exp(-\nu_ih)\frac{\sin\knui h}{\knui}
+-\frac{h}{2}k^2\left|E(0)\right|^2_k\exp(-\nu_ih)
+\end{split}
+\end{falign}
+
+In the same way, $E_k$ is integrated one iteration step $h$ ahead
+\begin{align*}
+E_k(h) = E_k(0)\exp\left(-(ik^2{+}\nu_e)h\right)-
+i\frac{h}{2}\left(\left(n(0)E(0)\right)_k\exp\left(-(ik^2{+}\nu_e)h\right)+
+\left(n(h)E(h)\right)_k\right)
+\end{align*}
+Posing
+\begin{align*}
+\widehat{E}_k = E_k(0)\exp\left(-(ik^2{+}\nu_e)h\right)\quad\text{and}\quad
+(\widehat{nE})_k = \left(n(0)E(0)\right)_k\exp\left(-(ik^2{+}\nu_e)h\right)
+\intertext{yields}
+E_k(h)=\widehat{E}_k-i\frac{h}{2}\left(\widehat{nE})_k+
+\left(n(h)E(h)\right)_k\right)
+\end{align*}
+Then taking the inverse Fourier transform of this equation leads to
+\begin{falign}
+E_j(h)=\frac{\widehat{E}_j-i\frac{h}{2}(\widehat{nE})_j}{1+i\frac{h}{2}n_j(h)}
+\end{falign}
+
+In order to calculate $n_k^\prime$ one step iteration step ahead, let us 
+pose $v_k=n_k^\prime$, \eq{eq:zakn} is written
+\begin{align*}
+v_k^\prime+2\nu_iv_k=-k^2n_k-k^2\left|E\right|^2_k
+\end{align*}
+The integral form of this equation is
+\begin{align*}
+v_k(t) = v_k(0)\exp(-2\nu_it)-
+k^2\int_0^t\left(n_k+\left|E\right|^2_k\right)\exp(-2\nu_i(t{-}t^\prime))
+\dint{t^\prime}
+\end{align*}
+Applying the trapezoidal rule leads to
+\begin{falign}
+n^\prime_k(h) = n^\prime_k(0)\exp(-2\nu_ih)-
+\frac{h}{2}k^2\left(\left(n_k(0){+}\left|E(0)\right|^2_k\right)
+\exp(-2\nu_ih)+n_k(h)+\left|E(h)\right|^2_k\right)
+\end{falign}
+
+\section{Ion acoustic damping}
+The dispersion relation for ion acoustic wave is written
+\begin{align}
+\omega_r&=kc_s\\
+\omega_i&=\gamma_{ia}=\sqrt{\frac{\pi}{8}}
+\left(\left(\frac{m_e}{m_i}\right)^\frac{1}{2}+
+\left(\frac{\Te}{T_i}\right)^\frac{3}{2}
+\exp\left(-\frac{\Te}{2T_i}-\frac{3}{2}\right)\right)|k|c_s\\
+\tilde{\omega}_i&=\sqrt{\frac{\pi}{8}}
+\left(\left(\frac{m_e}{m_i}\right)^\frac{1}{2}+
+\left(\frac{\Te}{T_i}\right)^\frac{3}{2}
+\exp\left(-\frac{\Te}{2T_i}-\frac{3}{2}\right)\right)|\tilde{k}|
+\end{align}
+
+
+\section{Landau damping}
+The dispersion relation for Langmuir wave is written
+\begin{align}
+\omega_r^2&=\omega_e^2\left(1{+}3\alpha^2\right)\\
+\omega_i&=\gamma_L=\frac{\pi}{2}\frac{\omega_e^2}{k^2}\omega_r
+\diff*{f}{v}{\omega_r/k}
+\end{align}
+where $\alpha=k\lambda_e$ is the wave number normalised to the electron
+Debye length $\lambda_e=v_e/w_e$, $v_e$ is the thermal velocity at
+temperature
+$\Te$ and $\omega_e$ is the electron plasma frequency.
+$v_\phi=\omega_r/k$ is the phase velocity of the Langmuir wave with
+frequency $\omega_r$ and wave number $k$.
+$f$ is the electron velocity
+distribution function.
+
+If we consider a Maxwellian velocity distribution function with
+mean velocity $u$ and thermal velocity $\theta$
+\begin{equation}
+f(v)=\frac{1}{\sqrt{2\pi}}\frac{1}{\theta}
+\exp\left(-\frac{1}{2}\left(\frac{v-u}{\theta}\right)^2\right)
+\end{equation}
+the Langmuir damping is written
+\begin{equation}
+\omega_i=-\sqrt{\frac{\pi}{8}}\frac{\omega_e^2}{k^2\theta^2}\frac{|k|}{k}
+\omega_r\frac{\omega_r-ku}{k\theta}
+\exp\left(-\frac{1}{2}\left(\frac{\omega_r-ku}{k\theta}\right)^2\right)
+\end{equation}
+Now normalising to the thermal velocity $v_e$ and posing 
+$\beta^2=1{+}3\alpha^2$ 
+leads to
+\begin{equation}
+\omega_i=-\sqrt{\frac{\pi}{8}}\frac{\omega_e}{\alpha^2}\frac{|k|}{k}
+\frac{v_e^2}{\theta^2}\beta
+\left(\frac{\beta}{\alpha}\frac{v_e}{\theta}-\frac{u}{\theta}\right)
+\exp\left(-\frac{1}{2}\left(
+\frac{\beta}{\alpha}\frac{v_e}{\theta}-\frac{u}{\theta}
+\right)^2\right)
+\end{equation}
+
+The Zakharov normalised variables  $\tilde{k}$ and $\tilde{t}$ are related
+to their physical counterparts by
+\begin{align*}
+\tilde{k}&=\frac{3}{2}\sqrt{\frac{m_i}{m_e\eta}}\frac{v_e}{\omega_e}k\\
+\tilde{\omega}&=\frac{3}{2}\frac{m_i}{m_e\eta}\frac{\omega}{\omega_e}
+\end{align*}
+
+The damping in normalised units is thus written
+\begin{equation}
+\tilde{\omega}_i=-\sqrt{\frac{\pi}{8}}
+\left(\frac{3}{2}\right)^3\left(\frac{m_i}{m_e\eta}\right)^2
+\frac{1}{\tilde{k}^2}\frac{|\tilde{k}|}{\tilde{k}}\frac{v_e^2}{\theta^2}
+\beta\left(\frac{\beta}{\alpha}\frac{v_e}{\theta}-\frac{u}{\theta}\right)
+\exp\left(-\frac{1}{2}\left(
+\frac{\beta}{\alpha}\frac{v_e}{\theta}-\frac{u}{\theta}
+\right)^2\right)
+\end{equation}
+where $\alpha$ can be expressed in terms of the normalised wave number
+\begin{align*}
+\alpha = k\lambda_e=\tilde{k}\frac{2}{3}\sqrt{\frac{m_e\eta}{m_i}}
+\end{align*}
+
+\subsection{Background electrons}
+The background electrons with $u=0$ and $\theta=v_e$ give
+\begin{align}
+\omega_i&=-\sqrt{\frac{\pi}{8}}\frac{\omega_e}{\alpha^2|\alpha|}
+\beta\exp\left(-\frac{1}{2\alpha^2}-\frac{3}{2}\right)\\
+\tilde{\omega}_i&=-\sqrt{\frac{\pi}{8}}
+\left(\frac{3}{2}\right)^4\left(\frac{m_i}{m_e\eta}\right)^{5/2}
+\frac{1}{\tilde{k}^2|\tilde{k}|}
+\left(1+\frac{4}{3}\tilde{k}^2\frac{m_e\eta}{m_i}\right)
+\exp\left(-\frac{9}{8}\frac{m_i}{m_e\eta}\frac{1}{\tilde{k}^2}-
+\frac{3}{2}\right)
+\end{align}
+
+\subsection{Beam}
+For a beam with parameters $u=v_b$ and $\theta=\Delta v_b$,
+the Landau damping is written
+\begin{align}
+\omega_i&=-\sqrt{\frac{\pi}{8}}\frac{\omega_e}{\alpha^2}\frac{|k|}{k}
+\frac{v_e^2}{\Delta v_b^2}\beta
+\left(\frac{\beta}{\alpha}\frac{v_e}{\Delta v_b}-
+\frac{v_b}{\Delta v_b}\right)
+\exp\left(-\frac{1}{2}\left(
+\frac{\beta}{\alpha}\frac{v_e}{\Delta v_b}-\frac{v_b}{\Delta v_b}
+\right)^2\right)\\
+\tilde{\omega}_i&=-\sqrt{\frac{\pi}{8}}
+\left(\frac{3}{2}\right)^3\left(\frac{m_i}{m_e\eta}\right)^2
+\frac{1}{\tilde{k}^2}\frac{|\tilde{k}|}{\tilde{k}}
+\frac{v_e^2}{\Delta v_b^2}\beta
+\left(\frac{\beta}{\alpha}\frac{v_e}{\Delta v_b}-
+\frac{v_b}{\Delta v_b}\right)
+\exp\left(-\frac{1}{2}\left(
+\frac{\beta}{\alpha}\frac{v_e}{\Delta v_b}-\frac{v_b}{\Delta v_b}
+\right)^2\right)
+\end{align}
+
+\section{Plasma line}
+The Zakharov equations are split into a fast time scale and a slow time
+scale equation. To relate the fast electron density response yo the
+electrostatic Langmuir envelope field, we use Poisson equation
+\begin{align}
+\diffp{E_L}{x}=-\frac{e}{\epso}(n_e-n_i)
+\end{align}
+Electron and ion densities are decompose according to the two time scales
+assumed
+\begin{align}
+n_e & = n_0+\delta n_i + \delta n_e\\
+n_i & = n_0+\delta n_i
+\end{align}
+where $\delta n_i$ is the slow time scale density perturbation (with
+quasi-neutrality) and $\delta n_e$ is the fast time scale density
+perturbation.
+Poisson equation becomes
+\begin{align}
+\frac{1}{2}\diffp{E}{x}\exp(-i\omega_0t)+\text{c.c.}=
+-\frac{e}{\epso}\delta n_e
+\end{align}
+and in normalised variables
+\begin{align}
+\tilde{n}(x,t) =
+-\frac{1}{\sqrt{3}}\sqrt{\eta}\diffp{\tilde{E}(x,t)}{x}\exp(-i\omega_0t)+
+\text{c.c.}
+\end{align}
+therefore in physical units
+\begin{align}
+\av{|\delta n(k, \omega)|^2} = \frac{\epso^2}{e^2} k^2\av{|E(k,\omega)|^2}
+\end{align}
+
+\section{Stochastic Zakharov equations}
+Let use first consider the two following homogeneous wave equations 
+for Langmuir waves and ion-acoustic waves
+\begin{align}
+\diff{E_k}{t}+\left(\nu_e+ik^2\right)E_k &= 0,
+\label{eq:lwe}\\
+\diff[2]{n_k}{t}+2\nu_i\diff{n_k}{t}+k^2n_k &= 0,
+\label{eq:lwn}
+\end{align}
+and let us recast those deterministic wave equations into their stochastic
+counterparts
+with complex stochastic complex noise source $W_t$ (Gaussian white noise)
+and where $\sigma_E$, $\sigma_n$ and $\sigma_v$ are real valued functions
+of the variable $k$. 
+
+These equations can be written as
+\begin{align}
+\dint{E_k}&=-(\nu_e+ik^2)E_k\dint{t}+\frac{\sigma_E}{\sqrt{2}}
+\left(\dint{B_{1}}+i\dint{B_{2}}\right),
+\label{eq:sde0}\\
+\dint{n_k}&=v_k\dint{t}+\frac{\sigma_n}{\sqrt{2}}
+\left(\dint{B_{3}}+i\dint{B_{4}}\right),
+\label{eq:sde20}\\
+\dint{v_k}&=-2\nu_i v_k\dint{t}-k^2n_k\dint{t}+\frac{\sigma_v}{\sqrt{2}}
+\left(\dint{B_{5}}+i\dint{B_{6}}\right),
+\label{eq:sde21}
+\end{align}
+where $B_{2j}$ and $B_{2j{+}1}$ denote Wiener processes describing 
+Brownian motion and are given by
+\begin{align}
+B_{2j}(t) = \int_0^t\Re{W_t}\dint{t},\qquad\text{and}\qquad
+B_{2j{+}1}(t) = \int_0^t\Im{W_t}\dint{t}.\nonumber
+\end{align}
+
+\subsection{Langmuir wave equation}
+Posing 
+\begin{align}
+\vec{X}\equiv\begin{pmatrix}X_1\\X_2\end{pmatrix}
+=\begin{pmatrix}\Re{E_{k}}\\\Im{E_{k}}\end{pmatrix}
+\qquad\text{and}\qquad
+\dint{\vec{B}}\equiv\begin{pmatrix}\dint{B_1}\\\dint{B_2}\end{pmatrix}.
+\end{align}
+We can rewrite \eq{eq:sde0} in matrix form as a two-dimensional It\^o
+equation
+\begin{align}
+\dint{\vec{X}}=
+\begin{pmatrix}{-}\nu_e&k^2\\{-}k^2&{-}\nu_e\end{pmatrix}
+\vec{X}\dint{t}+\frac{\sigma_E}{\sqrt{2}}\dint{\vec{B}},
+\end{align}
+and making use of the multi-dimensional It\^o-formula \citep{oksendal:2000}, 
+we get
+\begin{align}
+\dint{(\vec{X}^T\vec{X})} = &\;
+2X_1\dint{X_1}+2X_2\dint{X_2}+(\dint{X_1})^2+(\dint{X_2})^2\nonumber\\
+= &\;2X_1\left(\left(-\nu_eX_1{-}k^2X_2\right)\dint{t}+
+\frac{\sigma_E}{\sqrt{2}}\dint{B_{1}}\right)+\nonumber\\
+&\;2X_2\left(\left(k^2X_1{-}\nu_eX_2\right)\dint{t}+
+\frac{\sigma_E}{\sqrt{2}}\dint{B_{2}}\right)+
+\frac{\sigma_E^2}{2}\dint{t}{+}\frac{\sigma_E^2}{2}\dint{t}.\nonumber
+\end{align}
+Taking the expectation 
+$\mathrm{E}[\dint{(\vec{X}^T\vec{X})}]$
+and interchanging the integrals,
+$\mathrm{E}[\dint{(\vec{X}^T\vec{X})}]\equiv\dint{\av{|E_k(t)|^2}}$
+gives the following deterministic differential equation (since the
+stochastic terms fall when we take the expectation)
+\begin{align}
+\dint{\av{|E_k(t)|^2}} &= -2\nu_e\av{|E_k(t)|^2}\dint{t}+\sigma_E^2\dint{t}
+\end{align}
+which has the analytic solution
+\begin{align}
+\av{|E_k(t)|^2} = \exp(-2\nu_et)\av{|E_k(0)|^2}+\frac{\sigma_E^2}{2\nu_e}
+\left(1-\exp(-2\nu_et)\right)
+\end{align}
+and finally the stationary (long term) variance is given by
+\begin{align}
+\lim_{t\rightarrow\infty}\av{|E_k(t)|^2} = \frac{\sigma_E^2}{2\nu_e}
+\end{align}
+
+\subsection{Ion acoustic wave equation}
+Posing
+\begin{align}
+\vec{X}\equiv
+\begin{pmatrix}X_1\\X_2\\X_3\\X_4\end{pmatrix}=
+\begin{pmatrix}\Re{n_{k}}\\\Im{n_{k}}\\\Re{v_{k}}\\\Im{v_{k}}\end{pmatrix}
+\qquad\text{and}\qquad
+\dint{\vec{B}}\equiv
+\begin{pmatrix}\dint{B_3}\\\dint{B_4}\\\dint{B_5}\\\dint{B_6}\end{pmatrix}.
+\end{align}
+We can rewrite \eqs{eq:sde20}{eq:sde21} in matrix form as a 
+four-dimensional It\^o equation
+\begin{align}
+\dint{\vec{X}}=
+\begin{pmatrix}
+0&0&1&0\\0&0&0&1\\{-}k^2&0&{-}2\nu_i&0\\0&{-}k^2&0&{-}2\nu_i
+\end{pmatrix}
+\vec{X}\dint{t}+
+\frac{1}{\sqrt{2}}
+\begin{pmatrix}
+\sigma_n&0&0&0\\0&\sigma_n&0&0\\0&0&\sigma_v&0\\0&0&0&\sigma_v
+\end{pmatrix}\dint{\vec{B}},
+\end{align}
+and making use of the multi-dimensional It\^o-formula, we get
+\begin{align}
+\dint{X_1^2}+\dint{X_2^2} = &\; 
+2X_1\dint{X_1}+2X_2\dint{X_2}+(\dint{X_1})^2+(\dint{X_2})^2\nonumber\\
+= &\;
+2X_1\left(X_3\dint{t}+\frac{\sigma_n}{\sqrt{2}}\dint{B_3}\right)+
+2X_2\left(X_4\dint{t}+\frac{\sigma_n}{\sqrt{2}}\dint{B_4}\right)+
+\frac{\sigma_n^2}{2}\dint{t}+\frac{\sigma_n^2}{2}\dint{t}\nonumber\\
+\dint{X_3^2}+\dint{X_4^2} = &\; 
+2X_3\dint{X_3}+2X_4\dint{X_4}+(\dint{X_3})^2+(\dint{X_4})^2\nonumber\\
+= &\; 2X_3 \left(\left(-k^2X_1-2\nu_iX_3\right)\dint{t}+
+\frac{\sigma_v}{\sqrt{2}}\dint{B_5}\right)+ \nonumber\\
+&\; 2X_4 \left(\left(-k^2X_2-2\nu_iX_4\right)\dint{t}+
+\frac{\sigma_v}{\sqrt{2}}\dint{B_6}\right)+
+\frac{\sigma_v^2}{2}\dint{t}+\frac{\sigma_v^2}{2}\dint{t}\nonumber
+\end{align}
+We identify $|n_k|^2=X_1^2+X_2^2$, $|v_k|^2=X_3^2+X_4^2$ and
+$n_k\cc{v}_k+\cc{n}_kv_k=2(X_1X_3+X_2X_4)$
+and therefore
+\begin{align}
+\dint{|n_k|^2} &= \left(n_k\cc{v}_k+\cc{n}_kv_k\right)\dint{t}+
+\sigma_n^2\dint{t}\\
+\dint{|v_k|^2} &= -4\nu_i|v_k|^2\dint{t}-
+k^2\left(n_k\cc{v}_k+\cc{n}_kv_k\right)\dint{t}+\sigma_v^2\dint{t}
+\end{align}
+
+Taking the expectation and interchanging the integrals
+gives (the stochastic terms fall when we take the expectation)
+we find
+\begin{align}
+\dint{\av{|n_k|^2}} &= \av{n_k\cc{v}_k+\cc{n}_kv_k}\dint{t}+
+\sigma_n^2\dint{t}\\
+\dint{\av{|v_k|^2}}+4\nu_i\av{|v_k|^2}\dint{t} &= -
+k^2\av{n_k\cc{v}_k+\cc{n}_kv_k}\dint{t}+\sigma_v^2\dint{t}
+\end{align}
+
+Let use estimate a differential equation for the expectation 
+$\av{n_k\cc{v}_k+\cc{n}_kv_k}$. Making use of the multi-dimensional
+It\^o-formula, we get
+\begin{align}
+\dint{X_1X_3}=&\;X_1\dint{X_3}+X_3\dint{X_1}+\dint{X_1}\dint{X_3}\nonumber\\
+= &\;
+X_1\left(\left(-k^2X_1-2\nu_iX_3\right)\dint{t}+
+\frac{\sigma_v}{\sqrt{2}}\dint{B_5}\right)+
+X_3\left(X_3\dint{t}+\frac{\sigma_n}{\sqrt{2}}\dint{B_3}\right)+\nonumber\\
+&\; \left(X_3\dint{t}+\frac{\sigma_n}{\sqrt{2}}\dint{B_3}\right)
+\left(\left(-k^2X_1-2\nu_iX_3\right)\dint{t}+
+\frac{\sigma_v}{\sqrt{2}}\dint{B_5}\right)\nonumber\\
+\dint{X_2X_4}=&\;X_2\dint{X_4}+X_4\dint{X_2}+\dint{X_2}\dint{X_4}\nonumber\\
+= &\;
+X_2\left(\left(-k^2X_2-2\nu_iX_4\right)\dint{t}+
+\frac{\sigma_v}{\sqrt{2}}\dint{B_6}\right)+
+X_4\left(X_4\dint{t}+\frac{\sigma_n}{\sqrt{2}}\dint{B_4}\right)+\nonumber\\
+= &\;\left(X_4\dint{t}+\frac{\sigma_n}{\sqrt{2}}\dint{B_4}\right)
+\left(\left(-k^2X_2-2\nu_iX_4\right)\dint{t}+
+\frac{\sigma_v}{\sqrt{2}}\dint{B_6}\right)\nonumber
+\end{align}
+and
+\begin{align}
+\dint{\av{X_1X_3}}=-k^2\av{X_1^2}\dint{t}-2\nu_i\av{X_1X_3}\dint{t}+
+\av{X_3^2}\dint{t}\nonumber\\
+\dint{\av{X_2X_4}}=-k^2\av{X_2^2}\dint{t}-2\nu_i\av{X_2X_4}\dint{t}+
+\av{X_4^2}\dint{t}\nonumber
+\end{align}
+which can be rewritten as
+\begin{align}
+\dint{\av{n_k\cc{v}_k+\cc{n}_kv_k}}+2\nu_i\av{n_k\cc{v}_k+\cc{n}_kv_k}\dint{t}
+=-2k^2\av{|n_k|^2}\dint{t}+2\av{|v_k|^2}\dint{t}
+\end{align}
+Posing $x=\av{|n_k|^2}$, $y=\av{|v_k|^2}$ and
+$z=\av{n_k\cc{v}_k+\cc{n}_kv_k}$, $x$, $y$ and $z$ are solution of the
+following system of ordinary differential equations
+\begin{align}
+\diff{x}{t}&=z+\sigma_n^2\\
+\diff{y}{t}&=-4\nu_iy-k^2z+\sigma_v^2\\
+\diff{z}{t}&=-2k^2x+2y-2\nu_iz
+\end{align}
+together with the initial conditions
+\begin{align}
+x(0)&=\av{|n_k(0)|^2}\\
+y(0)&=\av{|v_k(0)|^2}\\
+z(0)&=\av{n_k(0)\cc{v}_k(0)+\cc{n}_k(0)v_k(0)}
+\end{align}
+
+This system of ordinary differential equations have solution so that posing
+\begin{align}
+X=\begin{pmatrix}x\\y\\z\end{pmatrix}\qquad\text{and}\qquad
+A=\begin{pmatrix}0&0&1\\0&{-}4\nu_i&{-}k^2\\{-}2k^2&2&-2\nu_i\end{pmatrix}
+\qquad\text{and}\qquad
+b=\begin{pmatrix}\sigma_n^2\\\sigma_v^2\\0\end{pmatrix}\nonumber
+\end{align}
+we can formulate the problem as
+\begin{align}
+\diff{X}{t}=AX+b
+\end{align}
+The eigen values $\lambda_i$ and eigen vectors $g_i$ of $A$ can be calculated
+analytically and are
+\begin{align}
+\lambda_1 &= -2\nu_i+2\sqrt{\nu_i^2-k^2}, &
+g_1 & = \begin{pmatrix}1\\
+k^2-2\sqrt{\nu_i^2-k^2}\left(\nu_i-\sqrt{\nu_i^2-k^2}\right)\\
+-2\left(\nu_i-\sqrt{\nu_i^2-k^2}\right)\end{pmatrix}\\
+\lambda_2 &= -2\nu_i, &
+g_2 & = \begin{pmatrix}1\\k^2\\-2\nu_i\end{pmatrix}\\
+\lambda_3 &= -2\nu_i-2\sqrt{\nu_i^2-k^2}, &
+g_3 & = \begin{pmatrix}1\\
+k^2+2\sqrt{\nu_i^2-k^2}\left(\nu_i+\sqrt{\nu_i^2-k^2}\right)\\
+-2\left(\nu_i+\sqrt{\nu_i^2-k^2}\right)\end{pmatrix}
+\end{align}
+In the same way the quantity
+\begin{align}
+A^{-1} b = \begin{pmatrix}
+-\frac{1}{4\nu_ik^2}\left(\sigma_v^2+k^2\sigma_n^2\right)-
+\frac{\nu_i}{k^2}\sigma_n^2\\
+-\frac{1}{4\nu_ik^2}\left(\sigma_v^2+k^2\sigma_n^2\right)\\
+\sigma_n^2
+\end{pmatrix}
+\end{align}
+
+\subsubsection{$k\neq0$}
+The solution takes the following form
+\begin{align}
+X(t)&=-A^{-1}b+ c_1\exp(\lambda_1t)g_1+ c_2\exp(\lambda_2t)g_2+
+c_3\exp(\lambda_3t)g_3\\
+X(0)&=-A^{-1}b+ c_1g_1+ c_2g_2+c_3g_3\label{eq:csts}
+\end{align}
+where the constants $(c_1,c_2,c_3)$ are calculated using \eq{eq:csts}.
+Since all the eigen values have negative real part we have
+\begin{align}
+\lim_{t\rightarrow\infty} X(t) = -A^{-1} b
+\end{align}
+and therefore
+\begin{align}
+\lim_{t\rightarrow\infty} \av{|n_k(t)|^2} = 
+\frac{1}{4\nu_ik^2}\left(\sigma_v^2+k^2\sigma_n^2\right)+
+\frac{\nu_i}{k^2}\sigma_n^2 = 
+\left(\frac{1}{4\nu_i}+\frac{\nu_i}{k^2}\right)\sigma_n^2+
+\frac{\sigma_v^2}{4\nu_ik^2}
+\end{align}
+\subsubsection{$k=0$}
+In this case we can also integrate analytically to get
+\begin{align}
+x(t)&=\frac{y(0)}{\nu_i}\frac{e^{-4\nu_it}{-}1}{4\nu_i}+
+\frac{\sigma_v^2}{4\nu_i^2}
+\left(t+\frac{e^{-4\nu_it}{-}1}{4\nu_i}\right)+
+\left(z(0){+}\frac{y(0)}{\nu_i}{-}
+\frac{\sigma_v^2}{2\nu_i^2}\right)\frac{e^{-2\nu_it}{-}1}{2\nu_i}
++\sigma_n^2t+x(0)\nonumber\\
+y(t) &= y(0)e^{-4\nu_it}+
+\frac{\sigma_v^2}{4\nu_i}\left(1{-}e^{-4\nu_it}\right)\nonumber\\
+z(t) &= -\frac{y(0)}{\nu_i}e^{-4\nu_it}+
+\frac{\sigma_v^2}{4\nu_i^2}\left(1+e^{-4\nu_it}\right)+
+\left(z(0)+\frac{y(0)}{\nu_i}-\frac{\sigma_v^2}{2\nu_i^2}\right)e^{-2\nu_it}
+\nonumber
+\end{align}
+and therefore the asymptotic behaviour
+\begin{align}
+\lim_{t\rightarrow\infty} \av{|n_k(t)|^2} =
+\left(\sigma_n^2+\frac{\sigma_v^2}{4\nu_i^2}\right)t
+\end{align}
+
+\subsection{Ornstein-Uhlenbeck process}
+
+The Ornstein-Uhlenbeck process also known as the mean reverting
+process in financial modelling, is a stochastic process $S_t$ defined by the
+following stochastic differential equation
+\begin{align}
+\dint{S_t}&=\theta(\mu-S_t)\dint{t} + \sigma \dint{W_t}
+\end{align}
+where $\theta>0$, $\mu$ and $\sigma>0$ are parameters and $W_t$ denotes the
+Wiener process. $1/\theta$ and $\sigma$ are the relaxation time and the
+diffusion constant. $\theta$, $\mu$ and $\sigma$ are called mean reversion rate,
+the mean and the volatility in financial mathematics. 
+The stationary long term mean, variance and covariance are given by
+\begin{align}
+\av{S_t} & = \mu, \\
+\av{S_t^2} &= \frac{\sigma^2}{2\theta}, \\
+\av{S_sS_t} &= \frac{\sigma^2}{2\theta}e^{-\theta(s{+}t)}
+\left(e^{-\theta(t{-}s)}{-}e^{-\theta(t{+}s)}\right)\quad\text{for}\quad s<t,
+\end{align}
+The Ornstein-Uhlenbeck stochastic process has an exact solution which allows
+to simulate it numerically with arbitrary time steps given an initial value
+$S(0)$ \citep{gillespie:1996c,gillespie:1996b}
+\begin{align}
+S(t) &= S(0)e^{-\theta t} + 
+\mu\left(1-e^{-\theta t}\right) + 
+\frac{\sigma}{\sqrt{2\theta}}\sqrt{1-e^{-2\theta t}}N(0,1).
+\end{align}
+Equivalently, it can be seen as the a normal distributed with mean 
+$S(0)\exp\left(-\lambda t\right)+\mu\left(1-\exp\left(-\lambda t\right)\right)$
+and standard deviation 
+$\sigma\sqrt{\frac{1-\exp\left(-2\lambda t\right)}{2\lambda}}$
+
+\section{Noise source terms for Cerenkov emission}
+
+$\dnk(t)$ and $\dEk(t)$ are noise source terms accounting
+for Cerenkov emission. Their form is such that thermal equilibrium is
+regained in the absence of an external drive. Explicit expressions
+are for the slow time scale equation
+\begin{align}
+\left|\frac{\dnk}{n_e}\right|^2&=\frac{1}{N}\frac{1}
+{(1+k^2\lambda_e^2)(1+\Te/T_i+k^2\lambda_e^2)}
+\end{align}
+while for the fast time scale equation
+\begin{align}
+\left|\frac{\dnk}{n_e}\right|^2&=\frac{1}{N}\frac{1}{2}\frac{k^2\lambda_e^2}
+{1+k^2\lambda_e^2}
+\end{align}
+which gives for the fluctuating electric field
+\begin{align}
+\frac{\varepsilon_0|\dEk|^2}{n_e\kB
+\Te}&=\frac{1}{N}\frac{1}{2}\frac{1}{1+k^2\lambda_e^2}
+\end{align}
+
+
+$\dnk(t)$ and $\dEk(t)$ are noise source terms accounting
+for Cerenkov emission. Their form is such that thermal equilibrium is
+regained in the absence of an external drive. Explicit expressions
+are as follow
+\begin{align}
+\left|\frac{\dnk}{n_e}\right|^2&=\frac{1}{N}\frac{1+\overline{\chi}_e(k)}
+{\overline{\epsilon}(k,0)},\nonumber\\
+&=\frac{1}{N}\frac{1+k^2\lambda_e^2}{1+k^2\lambda_e^2+0.5\Te/\Ti}.\\
+\frac{\varepsilon_0|\dEk|^2}{n_e\kB\Te}&=\frac{1}{N}\frac{{\chi}_e(k,0)}{
+1+{\chi}_e(k,0)}+\frac{1}{N}\frac{{\chi}_e(k,0)
+\left(1+\overline{\chi}_e(k)\right)}{
+\overline{\epsilon}(k,0)\left(1+{\chi}_e(k,0)\right)},\nonumber\\
+&=\frac{1}{N}\frac{1}{2k^2\lambda_e^2+1}+\frac{1}{N}
+\frac{(k^2\lambda_e^2+1)k^2\lambda_e^2}{2(k^2\lambda_e^2+1+0.5\Te/\Ti)
+(k^2\lambda_e^2+0.5)^2}
+\end{align}
+
+\section{Phase-space diffusion}
+
+The phase-space diffusion equation reads
+\citep{sanbonmatsu:2000b,sanbonmatsu:2001}
+\begin{align}
+\diffp{}{t}F_e(v,t) = \diffp{}{v}\left(D(v,t)\diffp{}{v}F_e(v,t)\right)
+%+\diffp{}{v}\delta D(v,t)F_e(v,t)/v_e^2
+-\frac{v}{L}\left(F_e(v,t)-F_e(v,t{=}0)\right)
+\end{align}
+where $F_e$ is the spatially averaged over the length $L$ of the 
+electron velocity distribution. 
+The diffusion coefficient $D$  is of the standard form 
+\begin{align}
+D(v,t) = \frac{L}{|v|}\left(\frac{e}{m}\right)^2\left|E_{k=\omega_r/|v|}(t)\right|^2
+\end{align}
+For convenience we change the variable $v$ into $k=\omega_r/v$ which yields
+\begin{align}
+\diffp{}{t}F_e(k,t) = \diffp{}{k}\left(
+D(k,t)\diffp{}{k}F_e(k,t)\diffp{k}{v}\right)\diffp{k}{v}
+%+\diffp{}{v}\delta D(v,t)F_e(v,t)/v_e^2
+-\frac{\omega_r}{kL}\left(F_e(k,t)-F_e(k,t=0)\right)
+\end{align}
+where 
+\begin{align}
+\diffp{k}{v}=-\frac{k|k|}{\omega_e^2}\omega_r
+\end{align}
+This equation can be differenced over a grid $k_j$ at times $n$
+using the Crank-Nicholson method,  i.e.
+\begin{align}
+\frac{F_j^{n+1}-F_j^n}{\Delta t}  = & 
+\frac{D_{j{+}\frac{1}{2}}^n\left(F_{j+1}^n-F_j^n\right)
+\partial_vk_{j{+}\frac{1}{2}}-
+D_{j{-}\frac{1}{2}}^n\left(F_j^n-F_{j-1}^n\right)\partial_vk_{j{-}\frac{1}{2}}}
+{2(\Delta k)^2}\partial_vk_j+\\
+& \frac{D_{j{+}\frac{1}{2}}^n\left(F_{j+1}^{n+1}-F_j^{n+1}\right)
+\partial_vk_{j{+}\frac{1}{2}}-
+D_{j{-}\frac{1}{2}}^n\left(F_j^{n+1}-F_{j-1}^{n+1}\right)
+\partial_vk_{j{-}\frac{1}{2}}}{2(\Delta k)^2}\partial_vk_j\\
+& -\frac{\omega_r}{k_jL}\left(\frac{F_j^n-F_j^0}{2}+\frac{F_j^{n+1}-F_j^0}{2}\right)
+\end{align}
+where
+\begin{align}
+D_{j{+}\frac{1}{2}}^n = \frac{1}{2}\left(D_j^n+D_{j+1}^n\right) 
+\qquad\text{and}\qquad
+\partial_vk_{j{+}\frac{1}{2}} = -\frac{\omega_e^2}{\omega_r}
+\left(\frac{k_j|k_j|}{2}+\frac{k_{j{+}1}|k_{j{+}1}|}{2}\right)
+\end{align}
+and the following boundary conditions
+\begin{align}
+F_0^{n+1}=F_0^n  \qquad\text{and}\qquad 
+F_N^{n+1}=F_N^n 
+\end{align}
+Defining 
+\begin{align}
+\alpha_j & = -\frac{\Delta t}{2(\Delta k)^2}\partial_vk_{j{-}\frac{1}{2}}D_{j{-}\frac{1}{2}}^n
+\partial_vk_j,\\
+\gamma_j & = -\frac{\Delta t}{2(\Delta k)^2}\partial_vk_{j{+}\frac{1}{2}}D_{j{+}\frac{1}{2}}^n
+\partial_vk_j,\\
+\beta_j & = 1 -\alpha_j-\gamma_j-\epsilon_j\\
+\delta_j & = 1 +\alpha_j+\gamma_j+\epsilon_j\\
+\epsilon_j & = -\frac{\omega_r\Delta t}{2k_jL}
+\end{align}
+Reorganising the terms leads to 
+\begin{align}
+F_0^{n+1}& =F_0^n\\
+\alpha_jF_{j-1}^{n+1}+\beta_jF_j^{n+1}+\gamma_jF_{j+1}^{n+1} & = 
+-\alpha_jF_{j-1}^n+\delta_jF_j^n-
+\gamma_jF_{j+1}^n+2\epsilon_jF_j^0\\
+F_N^{n+1}&=F_N^n
+\end{align}
+Using the tridiagonal matrix $T$
+\begin{align}
+\mathrm{Tri}(a,b,c)=
+\begin{pmatrix}
+1&0&0&0&\ldots&0&0&0&0\\
+a_1&b_1&c_1&0&\ldots&0&0&0&0\\
+0&\ddots&\ddots&\ddots&&&&&\vdots\\
+\vdots&&\ddots&\ddots&\ddots&&&&\vdots\\
+0&0&0&a_j&b_j&c_j&0&0&0\\
+\vdots&&&&\ddots&\ddots&\ddots&&\vdots\\
+\vdots&&&&&\ddots&\ddots&\ddots&0\\
+0&0&0&0&\ldots&0&a_{N{-}1}&b_{N{-}1}&c_{N{-}1}\\
+0&0&0&0&\ldots&0&0&0&1
+\end{pmatrix}
+\end{align}
+the set of equation is written
+\begin{align}
+\mathrm{Tri}(\alpha,1{-}\alpha{-}\gamma{-}\epsilon,\gamma)\vec{F}^{n+1} =
+\mathrm{Tri}(-\alpha,1{+}\alpha{+}\gamma{+}\epsilon,-\gamma)\vec{F}^{n} +
+\mathrm{Tri}(0,2\epsilon,0)\vec{F}^{0}
+\end{align}
+This system can be inverted using a tridiagonal algorithm
+
+The quasi-linear time $\tau_{1/2}$ which corresponds to the time to create
+half-plateau down to half of the beam width $v_b/2$ is written \citep{kontar:2001}
+\begin{align}
+\tau_{1/2} = \frac{n_e}{n_b}\frac{1}{\omega_e},
+\end{align}
+in normalised units
+\begin{align}
+\tilde{\tau}_{1/2} = \frac{n_e}{n_b}\frac{2}{3}\frac{\eta m_e}{m_i}.
+\end{align}
+
+
+
+\bibliography{abbrevs,research,books}
+
+\end{document}

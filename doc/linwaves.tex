@@ -1,0 +1,829 @@
+%
+% $Id: linwaves.tex,v 1.27 2023/02/23 08:56:05 patrick Exp $
+%
+% Copyright (c) 2000 Patrick Guio <patrick@phys.uit.no>
+%
+% All Rights Reserved.
+%
+% This program is free software; you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by the
+% Free Software Foundation; either version 2.  of the License, or (at your
+% option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+% Public License for more details.
+%
+
+\documentclass[10pt,a4paper]{article}
+\usepackage[latin1,utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[empty]{fullpage}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage[italic]{esdiff}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{fancybox}
+\usepackage{natbib}
+
+\renewcommand{\baselinestretch}{0.99}
+
+\parindent 0cm
+
+\newcommand{\eq}[1]{Eq.~(#1)}
+\newcommand{\eqs}[1]{Eqs.~(#1)}
+\newcommand{\fig}[1]{Fig.~#1}
+\newcommand{\figs}[1]{Figs.~#1}
+\newcommand{\tab}[1]{Table.~{#1}}
+\newcommand{\app}[1]{Appendix~#1}
+\newcommand{\sect}[1]{Section~#1}
+
+\newcommand{\src}{\ensuremath{\mathcal{D}}}
+\newcommand{\DE}{\src_{E_k}}
+\newcommand{\Dn}{\src_{n_k}}
+\newcommand{\Dv}{\src_{v_k}}
+
+\newlength{\mylength}
+
+\newenvironment{falign}%
+{\setlength{\fboxsep}{5pt}
+\setlength{\fboxrule}{0.5pt}
+\setlength{\mylength}{\textwidth}
+\addtolength{\mylength}{-2\fboxsep}
+\addtolength{\mylength}{-2\fboxrule}
+\Sbox
+\minipage{\mylength}%
+	\setlength{\abovedisplayskip}{-2\lineskip}
+	\setlength{\belowdisplayskip}{-2\lineskip}
+\align}%
+{\endalign\endminipage\endSbox
+\[\fbox{\TheSbox}\]}
+
+\def\matlab/{\textsc{Matlab}}
+
+
+%\def\tablesize{\footnotesize}
+\def\tablesize{\small}
+
+\def\knui{\sqrt{k^2{-}\nu_i^2}}
+%\def\knui{\left(k^2{-}\nu_i^2\right)^\frac{1}{2}}
+
+\def\dn{\delta n}
+\def\dnk{\delta n_k}
+\def\dnj{\delta n_j}
+\def\dE{\delta E}
+\def\dEk{\delta E_k}
+\def\dEj{\delta E_j}
+
+\bibliographystyle{egu}
+
+\title{One-dimensional linear waves solver with fluctuations}
+\author{Patrick Guio}
+\date{\normalsize$ $Date: 2023/02/23 08:56:05 $ $,~ $ $Revision: 1.27 $ $}
+
+\begin{document}
+
+\maketitle
+
+\section{Ordinary differential equations: pseudo spectral method}
+
+Assuming one-dimensional and periodic configuration space, the equations for high frequency 
+Langmuir waves and low frequency ion-acoustic or sound waves are written in spectral form and
+non-dimensional variables as a set of ordinary differential equations at wavenumber $k$ 
+for the $k$-components of the envelope of the complex electric field $E_k$ and the complex density
+fluctuation $n_k$
+\begin{align}
+\diff{E_k}{t} + \nu_eE_k + ik^2E_k &= 0, \label{eq:zake}\\
+\diff[2]{n_k}{t} + 2\nu_i\diff{n_k}{t} + k^2n_k &= 0,  \label{eq:zakn}
+\end{align}
+where $\nu_e$ and $\nu_i$ are relaxation time due to collisions.
+
+\eqs{\ref{eq:zake}--\ref{eq:zakn}} can be written in their integral form with specified initial
+conditions $E_k(0)$, $n_k(0)$ and $n_k^\prime(0)$
+\begin{align}
+E_k(t) &= E_k(0) e^{-(\nu_e{+}ik^2)t}, \label{eq:zakei}\\
+n_k(t) &= n_k(0) e^{-\nu_it}\left(\cos\knui t+\nu_i\frac{\sin\knui t}{\knui}\right)+
+          n_k^\prime(0) e^{-\nu_it}\frac{\sin\knui t}{\knui}. \label{eq:zakni}
+\end{align}
+
+\subsection{Numerical scheme}
+
+Numerical schemes to integrate exactly $E_k$ and $n_k$ from iteration $t$ to $t+1$ with
+time step $h$ are derived directly from \eqs{\ref{eq:zakei}-\ref{eq:zakni}} and are given by
+the exact updating formulae
+\begin{align}
+E_k^{t+1} &= E_k^t\exp\left(-(\nu_e+ik^2)h\right), \label{eq:Eknum}\\
+n_k^{t+1} &= n_k^t\exp(-\nu_ih)\left(\cos\knui h+ \nu_i\frac{\sin\knui h}{\knui}\right)+
+{n_k^\prime}^t\exp(-\nu_ih)\frac{\sin\knui h}{\knui} \label{eq:nknum}
+\end{align}
+
+It remains to integrate $n_k^\prime$ one iteration step ahead. Let us 
+define $v_k$ as $v_k=n_k^\prime$. The second-order ODE \eq{\ref{eq:zakn}} is written
+as two first-order ODE's
+\begin{align}
+n_k^\prime &= v_k\\
+v_k^\prime &= -2\nu_iv_k-k^2n_k \label{eq:vk}
+\end{align}
+The integral form of \eq{\ref{eq:vk}} is
+\begin{align}
+v_k(t)=v_k(0)e^{-2\nu_it}-k^2\int_0^tn_k(s)e^{-2\nu_i(t{-}s)}\dint{s}
+\end{align}
+Applying the trapezoidal method of integration
+\begin{align}
+\int_0^hf(x)\dint{x}=\frac{h}{2}\left(f(0)+f(h)\right)+\mathcal{O}(h^3f^{\prime\prime}(\xi)),
+\quad 0<\xi<h
+\end{align}
+$v_k$ is approximately integrated one iteration step ahead with time step $h$ 
+\begin{align}
+v_k^{t+1} &= v_k^t\exp\left(-2\nu_ih\right)-\frac{h}{2}k^2
+\left(n_k^t\exp\left(-2\nu_ih\right)+n_k^{t+1}\right)
+\label{eq:vknum}
+\end{align}
+
+\eq{\ref{eq:Eknum}} together with given initial condition $E_k^0$ is an exact numerical scheme
+to integrate \eq{\ref{eq:zake}}. 
+
+\eq{\ref{eq:nknum}} and \eq{\ref{eq:vknum}} together with given initial conditions $n_k^0$ and 
+$v_k^0$ is an approximate numerical scheme of order $\mathcal{O}(h^3)$ to integrate
+\eq{\ref{eq:zakn}}.
+
+\section{Stochastic differential equations}
+
+Let use rewrite the wave equations \eqs{\ref{eq:zake}--\ref{eq:zakn}} into autonomous 
+(and constant coefficients) stochastic differential equations in Itô form where thermal
+fluctuations (source terms) are modelled using Wiener process (or Brownian motion) $W_X(t)$
+\begin{align}
+\dint{E_k}&=-(\nu_e+ik^2)E_k\dint{t}+\src_E\dint{W_E(t)}, \label{eq:sdeE}\\
+\dint{n_k}&=v_k\dint{t}+\src_n\dint{W_n(t)}, \label{eq:sde20}\\
+\dint{v_k}&=-2\nu_i v_k\dint{t}-k^2n_k\dint{t}+\src_v\dint{W_v(t)}. \label{eq:sde21}
+\end{align}
+$\src_E$, $\src_n$ and $\src_v$ are so-called \emph{forcing} or \emph{diffusion} functions  
+of the SDE. $\src_E$, $\src_n$ and $\src_v$ are real positive coefficients that depend only on $k$.
+It is worth emphasising that since the diffusion terms are independent of the variables, 
+the SDE in Stratonovich form is identical to its Itô counterpart.
+
+\section{Stochastic Langmuir wave equation}
+
+\subsection{Analytic calculation for $\av{|E_k|^2}$}
+\label{sec:avEa}
+Setting 
+\begin{align*}
+\vec{X}=\left(\begin{array}{c}\Re{E_{k}}\\\Im{E_{k}}\end{array}\right),
+\quad
+\vec{A}=\left(\begin{array}{cc}{-}\nu_e&k^2\\{-}k^2&{-}\nu_e\end{array}\right),
+\quad
+\vec{F}=\left(\begin{array}{cc}\src_E&0\\0&\src_E\end{array}\right),
+\quad
+\dint{\vec{W}}=\left(\begin{array}{c}\dint{W_1}\\\dint{W_2}\end{array}\right).
+\end{align*}
+We can rewrite \eq{\ref{eq:sdeE}} for complex $E_k$ in matrix form as a two-dimensional real
+Itô equation
+\begin{align}
+\dint{\vec{X}}=\vec{A}\vec{X}\dint{t}+\vec{F}\dint{\vec{W}},
+\end{align}
+where $\vec{A}$ describes the linear deterministic dynamics and $\vec{F}$ is the forcing
+matrix.
+Applying the multi-dimensional Itô-formula \citep{oksendal:2000} for the square of the
+absolute value $|E_k|^ 2=\vec{X}^T\vec{X}$ gives
+\begin{align}
+\dint{(\vec{X}^T\vec{X})} = &\;
+2X_1\dint{X_1}+2X_2\dint{X_2}+\frac{1}{2}\left(2(\dint{X_1})^2+2(\dint{X_2})^2\right)
+\end{align}
+and using the Itô calculation rules described in \app{\ref{app:multi}} gives further
+\begin{align*}
+\dint{\vec{X}}= &\;2X_1\left(\left(-\nu_eX_1{+}k^2X_2\right)\dint{t}+\src_E\dint{W_1}\right)+\\
+&\;2X_2\left(\left({-}k^2X_1{-}\nu_eX_2\right)\dint{t}+\src_E\dint{W_2}\right)+
+\src_E^2\dint{t}{+}\src_E^2\dint{t}.
+\end{align*}
+Taking the expectation $\av{\cdot}$ of this equation, the stochastic terms fall
+and after simplification we get the following ODE for $\av{|E_k|^2}$
+\begin{align}
+\dint{\av{|E_k(t)|^2}} = -2\nu_e\av{|E_k(t)|^2}\dint{t}+2\src_E^2\dint{t}
+\end{align}
+which with the given initial condition $E_k(0)$ has analytic solution
+\begin{align}
+\av{|E_k(t)|^2} = \exp(-2\nu_et)|E_k(0)|^2+\frac{\src_E^2}{\nu_e}
+\left(1-\exp(-2\nu_et)\right)
+\label{eq:sde0a}
+\end{align}
+and the asymptotic behaviour
+\begin{align}
+\lim_{t\rightarrow\infty}\av{|E_k(t)|^2} = \frac{\src_E^2}{\nu_e}
+\end{align}
+
+With specified thermal fluctuation wavenumber spectra $\sigma_E$ of the intensity
+of the electric field $E$, we can set the forcing term $\src_E$  and the initial condition
+$E_k(0)$ to
+\begin{align}
+\src_E&=\sqrt{\nu_e\sigma_E}\\
+E_k(0)&=\sqrt{\sigma_E}
+\end{align}
+so that 
+\begin{align}
+\av{|E_k(t)|^2} = \sigma_E, \quad \mbox{for all } t
+\end{align}
+
+
+\subsection{Numerical scheme}
+
+
+$E_k$ is integrated exactly one iteration step $h$ ahead as
+\begin{align}
+E_k(h)=&\;E_k(0)e^{-(\nu_e{+}ik^2)h}+\src_E\int_0^t e^{-(\nu_e{+}ik^2)(t{-}s)}
+\left(\dint{W_1(s)}+i\dint{W_2(s)}\right)\label{eq:sde0i}
+\end{align}
+where the integrals in \eq{\ref{eq:sde0i}} are It\^o stochastic integrals with
+respect to the real Wiener processes $W_1(t)$ and $W_2(t)$. 
+
+Using the explicit Euler-Maruyama approximation \citep{higham:2001} for these integrals we get
+the following updating scheme 
+\begin{align}
+E_k^{t+1}=&\;E_k^te^{-(\nu_e{+}ik^2)h}+\src_E\sqrt{h}
+\left(N_1+iN_2\right)\label{eq:sde0num}
+\end{align}
+where $N_1$ and $N_2$ are statistically independent unit normal random variables computed using
+the Box-Muller algorithm.
+
+Note that the Milstein schemes (for both Itô and Stratonovich SDE) reduce to the Euler-Maruyama
+scheme since the diffusion term are constants.
+
+The Euler-Maruyama scheme \eq{\ref{eq:sde0num}} has strong order of convergence $1/2$ (and weak
+order of convergence $1$) and converges to the Itô solution. In the case of additive noise
+however the Euler-Maruyama scheme has strong order of accuracy $1$.
+
+Also the exact numerical simulation algorithm for any positive
+time step derived for the equivalent Ornstein-Uhlenbeck process \citep{gillespie:1996b} can be
+used advantageously 
+
+\begin{align}
+E_k(h) = E_k(0)e^{-(\nu_e{+}ik^2)h}+\sqrt{\frac{\src_E^2}{2\nu_e}(1-e^{-2\nu_eh})}
+\left(N_1+i N_2\right)\label{eq:sde0e}
+\end{align}
+
+\subsection{Numerical experiment}
+
+\fig{\ref{fig:linwaves1}} show results of numerical experiments with chosen parameters.
+
+\begin{figure}[ht]
+\centering\includegraphics[width=0.8\columnwidth]{linwaves1}
+\caption{Expectation of the solution of \eq{\ref{eq:sde0e}} for 300
+different paths and the analytic solution \eq{\ref{eq:sde0a}}. Parameters are
+$h=0.01$, $\nu_e=1$, $\sigma_E=1$, $E_k(0)=0.002$, $k=25\mbox{ and }80$.
+The dot lines are median, lower and upper quartile while solid lines are mean and mean with
+added/subtracted standard deviation }
+\label{fig:linwaves1}
+\end{figure}
+
+
+\section{Stochastic Ion acoustic wave equation}
+
+\subsection{Analytic calculation for $\av{|n_k|^2}$}
+Setting
+\begin{align*}
+\vec{X} = \left(\begin{array}{c}
+\Re{n_{k}}\\\Im{n_{k}}\\\Re{v_{k}}\\\Im{v_{k}}
+\end{array}\right),
+\qquad
+\dint{\vec{W}} = \left(\begin{array}{c}
+\dint{W_3}\\\dint{W_4}\\\dint{W_5}\\\dint{W_6}
+\end{array}\right),
+\end{align*}
+\begin{align*}
+\vec{A} = \left(
+\begin{array}{cccc}
+0&0&1&0\\0&0&0&1\\{-}k^2&0&{-}2\nu_i&0\\0&{-}k^2&0&{-}2\nu_i
+\end{array}\right),
+\qquad
+\vec{F} = \left(
+\begin{array}{cccc}
+\src_n&0&0&0\\0&\src_n&0&0\\0&0&\src_v&0\\0&0&0&\src_v
+\end{array}\right)
+\end{align*}
+where $\vec{F}$ is the forcing terms and $\vec{A}$ describes the linear
+deterministic dynamics, we can rewrite \eqs{\ref{eq:sde20}--\ref{eq:sde21}} in matrix form
+as a four-dimensional real Itô equation 
+\begin{align}
+\dint{\vec{X}}= \vec{A} \vec{X}\dint{t}+ \vec{F} \dint{\vec{W}}, \label{eq:sdenmatrix}
+\end{align}
+and making use of the multi-dimensional Itô formula and calculation rules 
+for $|n_k|^2=X_1^2+X_2^2$ and
+$|v_k|^2=X_3^2+X_4^2$ in similar way as in \sect{\ref{sec:avEa}}
+\begin{align*}
+\dint{X_1^2}+\dint{X_2^2} = &\; 
+2X_1\dint{X_1}+2X_2\dint{X_2}+(\dint{X_1})^2+(\dint{X_2})^2\\
+= &\;
+2X_1\left(X_3\dint{t}+\src_n\dint{W_3}\right)+
+2X_2\left(X_4\dint{t}+\src_n\dint{W_4}\right)+
+\src_n^2\dint{t}+\src_n^2\dint{t}\\
+\dint{X_3^2}+\dint{X_4^2} = &\; 
+2X_3\dint{X_3}+2X_4\dint{X_4}+(\dint{X_3})^2+(\dint{X_4})^2\\
+= &\; 2X_3 \left(\left(-k^2X_1-2\nu_iX_3\right)\dint{t}+\src_v\dint{W_5}\right)+\\
+  &\; 2X_4 \left(\left(-k^2X_2-2\nu_iX_4\right)\dint{t}+\src_v\dint{W_6}\right)+
+\src_v^2\dint{t}+\src_v^2\dint{t}
+\end{align*}
+Identifying $n_k\cc{v}_k+\cc{n}_kv_k=2\Re n_k\cc{v}_k = 2(X_1X_3+X_2X_4)$
+and taking the expectation $\av{\cdot}$ lead to the following ODE's
+\begin{align}
+\dint{\av{|n_k|^2}} &= \av{n_k\cc{v}_k+\cc{n}_kv_k}\dint{t}+2\src_n^2\dint{t}, \label{eq:nk2}\\
+\dint{\av{|v_k|^2}}+4\nu_i\av{|v_k|^2}\dint{t} &= -
+k^2\av{n_k\cc{v}_k+\cc{n}_kv_k}\dint{t}+2\src_v^2\dint{t} \label{eq:vk2}
+\end{align}
+
+We have to complete this system with a third ODE for the expectation 
+$\av{n_k\cc{v}_k+\cc{n}_kv_k}=2\Re\av{n_k\cc{v}_k}$.
+We use once again the multi-dimensional Itô formula for $2\Re\av{n_k\cc{v}_k}=2X_1X_2+2X_2X_4$
+\begin{align}
+\dint{(X_1X_3)}=&\;X_1\dint{X_3}+X_3\dint{X_1}+\dint{X_1}\dint{X_3}\nonumber\\
+= &\;
+X_1\left(\left(-k^2X_1-2\nu_iX_3\right)\dint{t}+
+\src_v\dint{W_5}\right)+X_3\left(X_3\dint{t}+\src_n\dint{W_3}\right)+\nonumber\\
+&\; \left(X_3\dint{t}+\src_n\dint{W_3}\right)
+\left(\left(-k^2X_1-2\nu_iX_3\right)\dint{t}+
+\src_v\dint{W_5}\right)\nonumber\\
+\dint{(X_2X_4)}=&\;X_2\dint{X_4}+X_4\dint{X_2}+\dint{X_2}\dint{X_4}\nonumber\\
+= &\;
+X_2\left(\left(-k^2X_2-2\nu_iX_4\right)\dint{t}+\src_v\dint{W_6}\right)+
+X_4\left(X_4\dint{t}+\src_n\dint{W_4}\right)+\nonumber\\
+= &\;\left(X_4\dint{t}+\src_n\dint{W_4}\right)
+\left(\left(-k^2X_2-2\nu_iX_4\right)\dint{t}+\src_v\dint{W_6}\right)\nonumber
+\end{align}
+taking the average $\av{\cdot}$ 
+\begin{align}
+\dint{\av{X_1X_3}}=-k^2\av{X_1^2}\dint{t}-2\nu_i\av{X_1X_3}\dint{t}+
+\av{X_3^2}\dint{t}\nonumber\\
+\dint{\av{X_2X_4}}=-k^2\av{X_2^2}\dint{t}-2\nu_i\av{X_2X_4}\dint{t}+
+\av{X_4^2}\dint{t}\nonumber
+\end{align}
+leads to
+\begin{align}
+\dint{\av{n_k\cc{v}_k+\cc{n}_kv_k}}+2\nu_i\av{n_k\cc{v}_k+\cc{n}_kv_k}\dint{t}
+=-2k^2\av{|n_k|^2}\dint{t}+2\av{|v_k|^2}\dint{t} \label{eq:2renkvk}
+\end{align}
+
+The three ODE's \eqs{\ref{eq:nk2}--\ref{eq:vk2}} and \eq{\ref{eq:2renkvk}} together with initial
+conditions $n_k(0)$ and $v_k(0)$ have a unique solution.
+
+Defining  $x=\av{|n_k|^2}$, $y=\av{|v_k|^2}$ and $z=2\Re\av{n_k\cc{v}_k}$, these equations
+are rewritten 
+\begin{align*}
+x^\prime&=z+2\src_n^2\\
+y^\prime&=-4\nu_iy-k^2z+2\src_v^2\\
+z^\prime&=-2k^2x+2y-2\nu_iz
+\end{align*}
+Or equivalently in matrix form
+\begin{align}
+\diff{\vec{X}}{t}=\vec{A}\vec{X}+\vec{B}
+\end{align}
+where
+\begin{align}
+\vec{X}=\left(\begin{array}{c}x\\y\\z\end{array}\right)\qquad
+\vec{A}=\left(\begin{array}{ccc}
+0&0&1\\0&{-}4\nu_i&{-}k^2\\{-}2k^2&2&-2\nu_i\end{array}\right)
+\qquad\mbox{and}\qquad
+\vec{B}=\left(\begin{array}{c}2\src_n^2\\2\src_v^2\\0\end{array}\right)\nonumber
+\end{align}
+
+The eigen values $\lambda_i$ and eigen vectors $\vec{g}_i$ of $\vec{A}$ have following analytic
+expressions 
+\begin{align*}
+\lambda_1 &= -2\nu_i{+}2\sqrt{\nu_i^2{-}k^2}, &
+\vec{g}_1 & = \left(\begin{array}{l}1\\
+k^2{-}2\sqrt{\nu_i^2{-}k^2}\left(\nu_i{-}\sqrt{\nu_i^2{-}k^2}\right)\\
+-2\left(\nu_i{-}\sqrt{\nu_i^2-k^2}\right)\end{array}\right)\\
+\lambda_2 &= -2\nu_i, &
+\vec{g}_2 & = \left(\begin{array}{l}1\\k^2\\-2\nu_i\end{array}\right)\\
+\lambda_3 &= -2\nu_i{-}2\sqrt{\nu_i^2{-}k^2}, &
+\vec{g}_3 & = \left(\begin{array}{l}1\\
+k^2{+}2\sqrt{\nu_i^2{-}k^2}\left(\nu_i{+}\sqrt{\nu_i^2{-}k^2}\right)\\
+-2\left(\nu_i{+}\sqrt{\nu_i^2{-}k^2}\right)\end{array}\right)
+\end{align*}
+
+\subsubsection{case $k\neq0$}
+The eigen values are all different from each other and the solution takes the following form
+\begin{align}
+\vec{X}(t)&=-\vec{A}^{-1}\vec{B}+\sum_{i=1}^3 c_i\exp(\lambda_it)\vec{g}_i\label{eq:sde2ak0}\\
+\end{align}
+where the constants $c_i$'s are solutions of the system at initial conditions \eq{\ref{eq:csts}}
+\begin{align}
+\vec{X}(0)&=-\vec{A}^{-1}\vec{B}+\sum_{i=1}^3 c_i\vec{g}_i\label{eq:csts}
+\end{align}
+and where
+\begin{align}
+\vec{A}^{-1} \vec{B} = \left(\begin{array}{l}
+-\displaystyle\frac{1}{2\nu_ik^2}\left(\src_v^2+k^2\src_n^2\right)-
+\frac{2\nu_i}{k^2}\src_n^2\\
+-\displaystyle\frac{1}{2\nu_i}\left(\src_v^2+k^2\src_n^2\right)\\
+\displaystyle2\src_n^2
+\end{array}\right)
+\end{align}
+
+Since all the eigen values have negative real part we have
+\begin{align}
+\lim_{t\rightarrow\infty} \vec{X}(t) = -\vec{A}^{-1} \vec{B}
+\end{align}
+and therefore
+\begin{align}
+\lim_{t\rightarrow\infty} \av{|n_k(t)|^2} &= 
+\frac{k^2+4\nu_i^2}{2\nu_ik^2}\src_n^2+\frac{1}{2\nu_ik^2}\src_v^2\\
+\lim_{t\rightarrow\infty} \av{|v_k(t)|^2} &= 
+\frac{k^2}{2\nu_i}\src_n^2+\frac{1}{2\nu_i}\src_v^2\\
+\lim_{t\rightarrow\infty} 2\Re\av{n_k\cc{v}_k} &= -2\src_n^2
+\end{align}
+
+Note that the same result is recovered using the full covariance matrix 
+$\vec{C}=\av{\vec{X}\vec{X}^T}$ with time evolution given by \citep{weiss:2003}
+\begin{align}
+\diff{\vec{C}}{t} = \vec{A} \vec{C} (t) + \vec{C} (t) \vec{A}^T + 2 \vec{D}
+\end{align}
+where the diffusion matrix $\vec{D}$ is $\vec{D}=\vec{F}\vec{F}^T/2$. The forcing matrix
+$\vec{F}$ and the dynamic matrix $\vec{A}$ are defined in \eq{\ref{eq:sdenmatrix}}.
+In the limit $t\rightarrow\infty$ the system reaches equilibrium and the equilibrium covariance
+satisfies
+\begin{align}
+\vec{A} \vec{C} + \vec{C}  \vec{A}^T + 2 \vec{D} = 0
+\end{align}
+
+If we want to force the system to have constant variance for all time we need to set the initial
+values $n_k(0)$, $v_k(0)$ and $\Re n_k(0)\cc{v}_k(0)$ to the asymptotic values, i.e.\
+\begin{align}
+|n_k(0)|^2 &= \frac{k^2+4\nu_i^2}{2\nu_ik^2}\src_n^2+\frac{1}{2\nu_ik^2}\src_v^2\\
+|v_k(0)|^2 &= \frac{k^2}{2\nu_i}\src_n^2+\frac{1}{2\nu_i}\src_v^2\\
+\Re n_k(0)\cc{v}_k(0) &= -\src_n^2 \label{eq:condnv}
+\end{align}
+
+Let us introduce a phase difference of $\theta$ between  $n_k(0)$ and $v_k(0)$ such that
+\begin{align*}
+n_k(0) = |n_k(0)|\exp\left( i\theta/2\right)\qquad\mbox{and}\qquad 
+v_k(0) = |v_k(0)|\exp\left(-i\theta/2\right)
+\end{align*}
+then \eq{\ref{eq:condnv}} is fulfilled when 
+$\Re n_k(0)\cc{v}_k(0) = |n_k(0)||v_k(0)|\cos\theta = -\src_n^2$, i.e. when $\theta$ fulfil
+the condition
+\begin{align}
+\cos\theta = -\frac{\src_n^2}{|n_k(0)||v_k(0)|}
+\end{align}
+
+
+Specifying the forcing functions $\src_n$ and $\src_v$
+\begin{align}
+\src_n&=\sqrt{\frac{2\nu_ik^2}{k^2+4\nu_i^2}\sigma_n}\\
+\src_v&=0\\
+\cos\theta&=-\sqrt{\frac{4\nu^2}{k^2+4\nu^2}}\\
+n_k(0) &= \sigma_n\exp(i\theta/2)\\
+v_k(0) &= \src_n\frac{k}{\sqrt{2\nu}}\exp(-i\theta/2)
+\end{align}
+where $\sigma_n$ is the thermal fluctuation wavenumber spectra of the intensity of the
+density $n$ we get the asymptotic behaviour
+\begin{align}
+\av{|n_k(t)|^2} = \sigma_n, \quad \mbox{for all } t
+\end{align}
+
+
+
+\subsubsection{case $k=0$}
+In this case we can also integrate analytically to get
+\begin{align}
+x(t)&=\frac{y(0)}{\nu_i}\frac{e^{-4\nu_it}{-}1}{4\nu_i}+
+\frac{\src_v^2}{2\nu_i^2}
+\left(t+\frac{e^{-4\nu_it}{-}1}{4\nu_i}\right)+
+\left(z(0){+}\frac{y(0)}{\nu_i}{-}
+\frac{\src_v^2}{\nu_i^2}\right)\frac{e^{-2\nu_it}{-}1}{2\nu_i}
++2\src_n^2t+x(0)\label{eq:sde2akn01}\\
+y(t) &= y(0)e^{-4\nu_it}+
+\frac{\src_v^2}{2\nu_i}\left(1{-}e^{-4\nu_it}\right)
+\label{eq:sde2akn02}\\
+z(t) &= -\frac{y(0)}{\nu_i}e^{-4\nu_it}+
+\frac{\src_v^2}{2\nu_i^2}\left(1+e^{-4\nu_it}\right)+
+\left(z(0)+\frac{y(0)}{\nu_i}-\frac{\src_v^2}{\nu_i^2}\right)e^{-2\nu_it}
+\end{align}
+and therefore the asymptotic behaviour
+\begin{align}
+\lim_{t\rightarrow\infty} \av{|n_0(t)|^2} =
+\left(2\src_n^2+\frac{\src_v^2}{2\nu_i^2}\right)t
+\end{align}
+
+
+\subsection{Numerical scheme}
+
+$n_k$ is integrated exactly and $v_k$ is integrated approximately  one time step $h$ ahead using
+the following expressions
+\begin{align}
+n_k(h)=&\;n_k(0)e^{-\nu_ih}\left(\cos\knui h+
+\nu_i\frac{\sin\knui h}{\knui}\right)+
+v_k(0)e^{-\nu_ih}\frac{\sin\knui h}{\knui}+\nonumber\\
+&\;\src_n\int_0^te^{-\nu_i(t{-}s)}
+\left(\cos\knui(t{-}s) +\nu_i\frac{\sin\knui(t{-}s)}{\knui}\right)
+\left(\dint{W_3(s)}+i\dint{W_4(s)}\right)+\nonumber\\
+&\;\src_v\int_0^te^{-\nu_i(t{-}s)}
+\frac{\sin\knui(t{-}s)}{\knui}\left(\dint{W_5(s)}+i\dint{W_6(s)}\right)\label{eq:sde20i}\\
+v_k(h)=&\;v_k(0)e^{-2\nu_ih}-\frac{h}{2}k^2\left(n_k(0)
+\exp(-2\nu_ih)+n_k(h)\right)+\nonumber\\
+&\;\src_v\int_0^te^{-2\nu_i(t{-}s)}
+\left(\dint{W_5(s)}+i\dint{W_6(s)}\right)
+\label{eq:sde21i}
+\end{align}
+
+Using the explicit Euler-Maruyama approximation for these integrals we get the following 
+update scheme  
+\begin{align}
+n_k^{t+1}=&\;n_k^t\exp(-\nu_ih)\left(\cos\knui h+
+\nu_i\frac{\sin\knui h}{\knui}\right)
+v_k^t\exp(-\nu_ih)\frac{\sin\knui h}{\knui}+\nonumber\\
+&\;\src_n\sqrt{h}\left(N_3+iN_4\right)
+\label{eq:sde20num}\\
+v_k^{t+1}=&\;v_k^t e^{-2\nu_ih}-\frac{h}{2}k^2\left(n_k^t
+e^{-2\nu_ih}+n_k^{t+1}\right)+\src_v\sqrt{h}\left(N_5+iN_6\right)
+\label{eq:sde21num}
+\end{align}
+where $N_i$'s are statistically independent unit normal random variables computed using the
+Box-Muller algorithm.
+
+Also the exact numerical simulation algorithm for any positive
+time step derived for the equivalent Ornstein-Uhlenbeck process \citep{gillespie:1996b} can be
+used advantageously
+
+\begin{align}
+n_k^{t+1}=&\;n_k^t\exp(-\nu_ih)\left(\cos\knui h+
+\nu_i\frac{\sin\knui h}{\knui}\right)
+v_k^t\exp(-\nu_ih)\frac{\sin\knui h}{\knui}+\nonumber\\
+&\;\sqrt{\frac{\src_n^2}{2\nu_i}(1-e^{-2\nu_ih})}\left(N_3+iN_4\right)
+\label{eq:sde20nume}\\
+v_k^{t+1}=&\;v_k^t e^{-2\nu_ih}-\frac{h}{2}k^2\left(n_k^t
+e^{-2\nu_ih}+n_k^{t+1}\right)+
+\sqrt{\frac{\src_v^2}{2\nu_i}(1-e^{-2\nu_ih})}\left(N_5+iN_6\right)
+\label{eq:sde21nume}
+\end{align}
+
+Also the effect of the integrated Ornstein-Uhlenbeck processes described by the last term on
+\eqs{\ref{eq:sde20nume}--\ref{eq:sde20nume}} could be integrated
+\begin{align}
+n_k^{t+1}=&\;n_k^t\exp(-\nu_ih)\left(\cos\knui h+
+\nu_i\frac{\sin\knui h}{\knui}\right)
+v_k^t\exp(-\nu_ih)\frac{\sin\knui h}{\knui}+\nonumber\\
+&\;\alpha(\src_n)\left(N_3+iN_4\right) +\gamma(\src_v)\left(N_5+iN_6\right)
+\label{eq:sde20nume2}\\
+v_k^{t+1}=&\;v_k^t e^{-2\nu_ih}-\frac{h}{2}k^2\left(n_k^t
+e^{-2\nu_ih}+n_k^{t+1}\right)+\beta(\src_n)\left(N_3+iN_4\right)+
+\alpha(\src_v)\left(N_5+iN_6\right)
+\label{eq:sde21nume2}
+\end{align}
+where 
+\begin{align}
+\alpha(\src) &= \sqrt{\frac{\src^2}{2\nu_i}(1-e^{-2\nu_ih})} \\
+\beta(\src) &= \left(\sigma_Y^2-\frac{\kappa_{XY}^2}{\sigma_X^2}\right)
+\end{align}
+and the expressions for $\sigma_X$, $\sigma_Y$ and $\kappa_{XY}$ are given by
+\cite{gillespie:1996b}.
+
+
+\subsection{Numerical experiments}
+
+\figs{\ref{fig:linwaves2}--\ref{fig:linwaves3}} show results of numerical
+experiments with chosen parameters.
+
+\begin{figure}[ht]
+\centering\includegraphics[width=0.8\columnwidth]{linwaves2}
+\caption{Expectation of the solution of \eqs{\ref{eq:sde20num}--\ref{eq:sde21num}} 
+for 300 different paths and analytic solution \eq{\ref{eq:sde2ak0}}.
+Parameters are $h=0.001$, $\nu_i=4\mbox{ and }15$, $\src_v=0$, 
+$\av{|n_k(0)|^2}=2e^{12}$  and $k=25\mbox{ and }80$. 
+The dot lines are median, lower and upper quartile while solid lines are mean and mean with
+added/subtracted standard deviation}
+\label{fig:linwaves2}
+\end{figure}
+
+\begin{figure}[ht]
+\centering\includegraphics[width=0.8\columnwidth]{linwaves3}
+\caption{Expectation of the solution of \eqs{\ref{eq:sde20num}--\ref{eq:sde21num}}
+for 300 different paths and analytic solution \eq{\ref{eq:sde2ak0}}.
+Parameters are $h=0.001$, $\nu_i=1$, $\sigma_n=1$, $\sigma_v=1$, 
+$\av{|n_k(0)|^2}=2e^{12}$, $k=25\mbox{ and }80$.
+The dot lines are median, lower and upper quartile while solid lines are mean and mean with
+added/subtracted standard deviation}
+\label{fig:linwaves3}
+\end{figure}
+
+
+\section{Electric field and density fluctuation wavenumber spectra}
+
+Poisson's equation relates the fast timescale electron density fluctuation $n$ to the high
+frequency electrostatic Langmuir field $E$ so that
+\begin{align}
+|k| |E_k| = \frac{e}{\varepsilon_0} |n_k| \simeq 1.8\cdot10^{-8} |n_k|
+\end{align}
+
+The fast and slow thermal fluctuations $n^L_k$ and $n^s_k$ associated to Langmuir waves and 
+sound waves respectively are given by
+\begin{align}
+\av{|n^L_k|^2} &= n_0\frac{k^2\lambda_e^2}{1+k^2\lambda_e^2}\\
+\av{|n^s_k|^2} &= n_0\frac{1}{(1+k^2\lambda_e^2)(1+k^2\lambda_e^2+T_e/T_i)}
+\end{align}
+so that
+\begin{align}
+\sigma_E^2 = \av{|E_k|^2} &= n_0\frac{e^2}{\varepsilon_0^2}\frac{\lambda_e^2}{1+k^2\lambda_e^2}\\
+\sigma_n^2 = \av{|n_k|^2} &= n_0\frac{1}{(1+k^2\lambda_e^2)(1+k^2\lambda_e^2+T_e/T_i)}
+\end{align}
+
+
+\fig{\ref{fig:linwaves4}--\ref{fig:linwaves5}} show results of numerical
+experiment with real
+parameters. Note for $|k|>40$, the convergence is not achieved toward the
+correct value for $\av{|E_k(0)|^2}_t$, where $\av{\quad}_t$ denotes a temporal
+average and not an ensemble average.
+
+\begin{figure}
+\centering\includegraphics[width=0.8\columnwidth]{linwaves4}
+\caption{Real parameters with $h=0.0018$ and $\sigma_v=0$. 
+The green line is the expected fluctuation level}
+\label{fig:linwaves4}
+\end{figure}
+
+\begin{figure}
+\centering\includegraphics[width=0.8\columnwidth]{linwaves5}
+\caption{Same real parameters but with $h=0.00018$ and $\sigma_v=0$. 
+The green line is the expected fluctuation level }
+\label{fig:linwaves5}
+\end{figure}
+
+%\begin{figure}
+%\centering\includegraphics[width=0.9\columnwidth]{linwaves6}
+%\caption{Same real parameters but with $h=0.000018$. The green line is the
+%expected fluctuation level}
+%\label{fig:linwaves6}
+%\end{figure}
+
+%\begin{figure}
+%\centering\includegraphics[width=0.8\columnwidth]{linwaves4alt}
+%\caption{Same parameters as \fig{\ref{fig:linwaves4}} except that the
+%numerical schemes for the stochastic integral in
+%\eqs{\ref{eq:sde0num}--\ref{eq:sde21num}} have been replaced by the
+%approximation given in \eq{\ref{eq:stratoint}} with $N=2$ and $N=15$ for
+%$n_k$ and $E_k$ respectively.
+%The green line is the expected fluctuation level}
+%\label{fig:linwaves41}
+%\end{figure}
+
+
+\begin{figure}
+\centering\includegraphics[width=0.8\columnwidth]{linwaves7}
+\caption{Corresponding parameters $\nu_i(k)$, $\nu_e(k)$ and $k^2$ }
+\label{fig:linwaves7}
+\end{figure}
+
+
+\bibliography{abbrevs,research,books}
+
+\appendix
+
+\section{Wiener process}
+
+The Wiener process $W(t)$ can be interpreted in such a way that its derivative is the
+Gaussian white noise process. The process $W(t)$ is indeed a Gaussian process with
+independent increments and satisfies \citep{oksendal:2000,higham:2001}
+\begin{itemize}
+\item $W(0)=0, \quad \av{W(t)}=0, \quad  \av{|W(t)|^2}=t, \quad\mbox{for }  t\geq0$
+\item For $t\geq0$ and $h>0$, the random variable given by the increment
+$W(t+h)-W(t)$ is normally distributed with mean zero and variance $h$; equivalently,
+$W(t+h)-W(t) \sim N(0,h) = \sqrt{h} N(0,1)$, where $N(\mu,\sigma)$ denotes the Normal
+distribution with mean $\mu$ and variance $\sigma^2$. This implies that $W(t)$ has a normal
+distribution with mean 0 and variance $t$.
+\item The increments $\Delta W_n=W(t_{n+1})-W(t_n)$ with $h_n=t_{n+1}-t_{n}$ are
+independent $N(0,h_n)$ normally distributed random variables which can be generated from
+independent, uniformly distributed random variables on $[0, 1]$.
+\end{itemize}
+
+
+\section{Multi-dimensional Itô formula}
+\label{app:multi}
+
+Assuming $\vec{X}(t)=(X_1(t),\ldots,X_n(t))$ is a $n$-dimensional stochastic process
+\begin{align}
+\dint{\vec{X}} = \vec{A}\vec{X}\dint{t}+\vec{F}\dint{\vec{W}}
+\end{align}
+where $\vec{W} = (W_1(t),\ldots,W_n(t))$ are independent Brownian motions then the dynamics of
+$f(\vec{X}(t))$ is
+\begin{align}
+\dint{f(\vec{X}(t))} = \sum_{i=1}^n\diffp{f}{{x_i}}\left(\vec{X}(t)\right)\dint{X_i(t)}+
+\frac{1}{2}\sum_{i,j=1}^n\diffp{f}{{x_i}{x_j}}\left(\vec{X}(t)\right)\dint{X_i(t)}\dint{X_j(t)}
+\end{align}
+where $\dint{X_i(t)}\dint{X_j(t)}$ terms are calculated by the rules
+\begin{align*}
+(\dint{W_i})(\dint{W_j})=\delta_{ij}\dint{t}\qquad\mbox{and}\qquad
+(\dint{t})^2 = \dint{t}\dint{W_i}=0
+\end{align*}
+
+\section{Euler-Maruyama and Milstein methods}
+
+A scalar stochastic process described by
+\begin{align}
+\dint{X(t)} = f(X(t))\dint{t}+g(X(t))\dint{W(t)}
+\end{align}
+can be integrated numerically with time step $h$ using the Euler-Maruyama method 
+\begin{align}
+X_{j{+}1} = X_j + h f(X_j) + g(X_j)\Delta W_j
+\end{align}
+where 
+\begin{align}
+\Delta W_j = W(t_j){-}W(t_{j{-}1}) = \sqrt{h} N(0,1)
+\end{align}
+The Milstein scheme is a second order integration scheme which is given for our scalar Itô SDE
+\begin{align}
+X_{j{+}1} = X_j + h f(X_j) + g(X_j)\Delta W_j + \frac{1}{2}g(X_j)g^\prime(X_j)
+\left(\left(\Delta W_t\right)^2-h\right)
+\end{align}
+There exists also a Milstein scheme for the corresponding scalar Stratonovich SDE given by
+\begin{align}
+X_{j{+}1} = X_j + h f(X_j) + g(X_j)\Delta W_j + \frac{1}{2}g(X_j)g^\prime(X_j)
+\left(\Delta W_t\right)^2
+\end{align}
+
+Similarly a $n$-dimensional linear stochastic process described by
+\begin{align}
+\dint{\vec{X}} = \vec{A}\vec{X}\dint{t}+\vec{F}\dint{\vec{W}}
+\end{align}
+can be integrated numerically using the multi-dimensional Euler-Maruyama method given by
+\begin{align}
+\vec{X}_j = \vec{X}_{j{-}1}+\vec{A}\vec{X}_{j{-}1}\Delta t+\vec{F}\sqrt{\Delta t}\vec{N}(0,1)
+\end{align}
+where $N$ is a vector of statistically independent normal distributions.
+
+
+
+\section{Strong and weak convergence}
+A method is said to be to have \emph{strong order of convergence} $\gamma$ if there exists
+a constant $C$ such that
+\begin{align}
+\av{|X_n-X(\tau)|} \leq C\Delta t^\gamma
+\end{align}
+for any fixed $\tau=n\Delta\in[0,T]$ and $\Delta t$ sufficiently small
+\citep{higham:2001}.
+
+Likewise a method is said to be to have \emph{weak order of convergence} $\gamma$ if there
+exists a constant $C$ such that for all functions $p$ in some class
+\begin{align}
+|\av{p(X_n)}-\av{p(X(\tau))}| \leq C\Delta t^\gamma
+\end{align}
+for any fixed $\tau=n\Delta\in[0,T]$ and $\Delta t$ sufficiently small
+\citep{higham:2001}.
+
+\section{Itô and Stratonovich stochastic integrals}
+
+The approximated Riemann sum of the integral of $h$ at the left-end point $t_j$ leads
+to the Itô integral 
+\begin{align}
+\int_0^T h(t) \dint{W(t)} = \sum_{j=0}^{N-1} h\left(t_j\right)\left(W(t_{j+1})-W(t_j)\right)
+\end{align}
+while using the mid point $(t_j+t_{j+1})/2$ leads to the Stratonovich integral 
+\begin{align}
+\int_0^T h(t)\circ \dint{W(t)} = \sum_{j=0}^{N-1} h\left(\frac{t_j+t_{j+1}}{2}\right)
+\left(W(t_{j+1})-W(t_j)\right)
+\end{align}
+
+
+Itô integration by parts gives
+\begin{align}
+\int_0^te^{-\nu(t{-}s)}\dint{W(s)} = W(t) -\nu\int_0^tW_se^{-\nu(t{-}s)}\dint{s}
+\end{align}
+the Itô integral in \eqs{\ref{eq:sde0i}-\ref{eq:sde21i}}
+can be approximated to first-order by
+\begin{align}
+e^{-\alpha h}\int_0^h e^{\alpha s}\dint{W(s)}\simeq e^{-\alpha h}\sqrt{h}N(0,1)
+\label{eq:itoint}
+\end{align}
+leads to the following numerical scheme
+\begin{align}
+n_k^{t+1}=&\;n_k^t\exp(-\nu_ih)\left(\cos\knui h+
+\nu_i\frac{\sin\knui h}{\knui}\right)+%\nonumber\\
+%&\;
+v_k^t\exp(-\nu_ih)\frac{\sin\knui h}{\knui}+\nonumber\\
+&\;\src_n\left(\cos\knui h+\nu_i\frac{\sin\knui h}{\knui}\right)
+\sqrt{h}\left(N(0,1)+iN(0,1)\right)
+\label{eq:sde20numa}\\
+v_k^{t+1}=&\;v_k^t e^{-2\nu_ih}-\frac{h}{2}k^2\left(n_k^t
+e^{-2\nu_ih}+n_k^{t+1}\right)+%\nonumber\\
+%&\;
+\src_v\sqrt{h}\left(N(0,1)+iN(0,1)\right)
+\label{eq:sde21numa}
+\end{align}
+
+An alternative \eq{\ref{eq:itoint}} is to use the following
+Stratonovich integral
+\begin{align}
+e^{-\alpha h}\int_0^h e^{\alpha s}\dint{W(s)}\simeq
+e^{-\alpha h}\sum_{j=0}^{N-1}\exp\left(\alpha\frac{h}{N}
+\left(j+\frac{1}{2}\right)\right)
+\sqrt{\frac{h}{N}}N(0,1)
+\label{eq:stratoint}
+\end{align}
+or the Itô integral
+\begin{align}
+e^{-\alpha h}\int_0^h \exp(\alpha s )\dint{W(s)}\simeq
+e^{-\alpha h}\sum_{j=0}^{N-1}\exp\left(\alpha\frac{h}{N}j\right)
+\sqrt{\frac{h}{N}}N(0,1)
+\label{eq:itoint2}
+\end{align}
+
+
+\end{document}

@@ -1,0 +1,170 @@
+%
+% $Id: damping.tex,v 1.6 2007/06/13 16:07:39 patrick Exp $
+%
+% Copyright (c) 2000 Patrick Guio <patrick@phys.uit.no>
+%
+% All Rights Reserved.
+%
+% This program is free software; you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by the
+% Free Software Foundation; either version 2.  of the License, or (at your
+% option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+% Public License for more details.
+%
+
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+%\usepackage{mathpple}
+\usepackage{textcomp}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage[italic]{esdiff}
+\usepackage{physics}
+\usepackage{braket}
+\usepackage{html}
+\usepackage{graphicx}
+\usepackage{color}
+\pagecolor{white}
+
+\parindent 0cm
+
+\newlength{\mylength}
+
+\newenvironment{feqnarray}%
+{\setlength{\fboxsep}{15pt}
+\setlength{\fboxrule}{0.5pt}
+\setlength{\mylength}{\textwidth}
+\addtolength{\mylength}{-2\fboxsep}
+\addtolength{\mylength}{-2\fboxrule}
+\Sbox
+\minipage{\mylength}%
+	\setlength{\abovedisplayskip}{-2\lineskip}
+	\setlength{\belowdisplayskip}{-2\lineskip}
+\begin{eqnarray}}%
+{\end{eqnarray}\endminipage\endSbox
+\[\fbox{\TheSbox}\]}
+
+
+\def\Eq#1{Eq.~(#1)}
+\def\Eqs#1{Eqs.~(#1)}
+
+\def\matlab/{\textsc{Matlab}}
+
+\bibliographystyle{egs-ag}
+
+\title{Langmuir damping}
+\author{Patrick Guio}
+\date{\normalsize$ $Date: 2007/06/13 16:07:39 $ $,~ $ $Revision: 1.6 $ $}
+
+\begin{document}
+
+\maketitle
+
+\section{Definition}
+The dispersion relation for Langmuir wave is written
+\begin{align*}
+\omega_r^2&=\omega_e^2\left(1{+}3\alpha^2\right)\\
+\omega_i&=\frac{\pi}{2}\frac{\omega_e^2}{k^2}\omega_r
+\diff*{f}{v}{\omega_r/k}
+\end{align*}
+where $\alpha=k\lambda_e$ is the wave number normalised to the electron 
+Debye length $\lambda_e=v_e/w_e$, $v_e$ is the thermal velocity at temperature
+$T_e$ and $\omega_e$ is the electron plasma frequency.
+$v_\phi=\omega_r/k$ is the phase velocity of the Langmuir wave with
+frequency $\omega_r$ and wave number $k$. 
+$f$ is the electron velocity
+distribution function.
+
+If we consider a Maxwellian velocity distribution function with 
+mean velocity $u$ and thermal velocity $\theta$
+\begin{equation}
+f(v)=\frac{1}{\sqrt{2\pi}}\frac{1}{\theta}
+\exp\left(-\frac{1}{2}\left(\frac{v-u}{\theta}\right)^2\right)
+\end{equation}
+the Langmuir damping is written
+\begin{equation}
+\omega_i=-\sqrt{\frac{\pi}{8}}\frac{\omega_e^2}{k^2\theta^2}\frac{|k|}{k}
+\omega_r\frac{\omega_r-ku}{k\theta}
+\exp\left(-\frac{1}{2}\left(\frac{\omega_r-ku}{k\theta}\right)^2\right)
+\end{equation}
+Now normalising to the thermal velocity $v_e$ leads to
+\begin{equation}
+\omega_i=-\sqrt{\frac{\pi}{8}}\frac{\omega_e}{\alpha^2}\frac{|k|}{k}
+\frac{v_e^2}{\theta^2}\sqrt{1{+}3\alpha^2}
+\left(
+\frac{\sqrt{1{+}3\alpha^2}}{\alpha}\frac{v_e}{\theta}-\frac{u}{\theta}
+\right)
+\exp\left(-\frac{1}{2}\left(
+\frac{\sqrt{1{+}3\alpha^2}}{\alpha}\frac{v_e}{\theta}-\frac{u}{\theta}
+\right)^2\right)
+\end{equation}
+
+
+The Zakharov normalised variables  $\tilde{k}$ and $\tilde{t}$ are related to
+their physical counterparts by
+\begin{align*}
+\tilde{k}&=\frac{3}{2}\sqrt{\frac{m_i}{m_e\eta}}\frac{v_e}{\omega_e}k\\
+\tilde{\omega}&=\frac{3}{2}\frac{m_i}{m_e\eta}\frac{\omega}{\omega_e}
+\end{align*}
+
+The damping is thus written
+\begin{equation}
+\tilde{\omega}_i=-\sqrt{\frac{\pi}{8}}
+\left(\frac{3}{2}\right)^3\left(\frac{m_i}{m_e\eta}\right)^2
+\frac{1}{\tilde{k}^2}\frac{|\tilde{k}|}{\tilde{k}}\frac{v_e^2}{\theta^2}
+\sqrt{1{+}3\alpha^2}
+\left(
+\frac{\sqrt{1{+}3\alpha^2}}{\alpha}\frac{v_e}{\theta}-\frac{u}{\theta}
+\right)
+\exp\left(-\frac{1}{2}\left(
+\frac{\sqrt{1{+}3\alpha^2}}{\alpha}\frac{v_e}{\theta}-\frac{u}{\theta}
+\right)^2\right)
+\end{equation}
+where $\alpha$ can be expressed in terms of the normalised wave number
+\[
+\alpha = \tilde{k}\frac{2}{3}\sqrt{\frac{m_e\eta}{m_i}}
+\]
+
+\section{Background electrons}
+The background electrons with $u=0$ and $\theta=v_e$ give
+\begin{align}
+\omega_i&=-\sqrt{\frac{\pi}{8}}\frac{\omega_e}{\alpha^2|\alpha|}
+\left(1{+}3\alpha^2\right)\exp\left(-\frac{1}{2\alpha^2}-\frac{3}{2}\right)\\
+\tilde{\omega}_i&=-\sqrt{\frac{\pi}{8}}
+\left(\frac{3}{2}\right)^4\left(\frac{m_i}{m_e\eta}\right)^{5/2}
+\frac{1}{\tilde{k}^2|\tilde{k}|}
+\left(1+\frac{4}{3}\tilde{k}^2\frac{m_e\eta}{m_i}\right)
+\exp\left(-\frac{9}{8}\frac{m_i}{m_e\eta}\frac{1}{\tilde{k}^2}-
+\frac{3}{2}\right)
+\end{align}
+
+
+\section{Beam}
+For a beam with parameters $u=v_b$ and $\theta=\Delta v_b$, and posing 
+$\beta=\sqrt{1{+}3\alpha^2}$ the Landau damping is written
+\begin{align}
+\omega_i&=-\sqrt{\frac{\pi}{8}}\frac{\omega_e}{\alpha^2}\frac{|k|}{k}
+\frac{v_e^2}{\Delta v_b^2}\beta
+\left(\frac{\beta}{\alpha}\frac{v_e}{\Delta v_b}-
+\frac{v_b}{\Delta v_b}\right)
+\exp\left(-\frac{1}{2}\left(
+\frac{\beta}{\alpha}\frac{v_e}{\Delta v_b}-\frac{v_b}{\Delta v_b}
+\right)^2\right)\\
+\tilde{\omega}_i&=-\sqrt{\frac{\pi}{8}}
+\left(\frac{3}{2}\right)^3\left(\frac{m_i}{m_e\eta}\right)^2
+\frac{1}{\tilde{k}^2}\frac{|\tilde{k}|}{\tilde{k}}
+\frac{v_e^2}{\Delta v_b^2}\beta
+\left(\frac{\beta}{\alpha}\frac{v_e}{\Delta v_b}-
+\frac{v_b}{\Delta v_b}\right)
+\exp\left(-\frac{1}{2}\left(
+\frac{\beta}{\alpha}\frac{v_e}{\Delta v_b}-\frac{v_b}{\Delta v_b}
+\right)^2\right)
+\end{align}
+
+
+\end{document}

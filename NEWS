@@ -1,0 +1,17 @@
+
+
+zakharov-1.1 (22-05-2002)
+	
+	* The sources are now complex stochastic Wiener processes
+
+zakharov-1.0 (13-06-2001)
+
+	* The matlab and C++/Blitz version is working with the possibility to
+	include damping of a Maxwellian background and a beam.
+
+zakharov-0.9 (16-03-2001)
+
+	* The matlab version of the 1-d periodic zakharov solver described in
+	Payne, 1983 (see README) is ready. The figures and tables of Payne, 1983 
+	can be reproduced by the scripts in the directory payne_1983.
+

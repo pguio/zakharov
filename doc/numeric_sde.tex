@@ -1,0 +1,917 @@
+%
+% $Id: numeric_sde.tex,v 1.44 2010/07/01 18:06:20 patrick Exp $
+%
+% Copyright (c) 2000 Patrick Guio <patrick@phys.uit.no>
+%
+% All Rights Reserved.
+%
+% This program is free software; you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by the
+% Free Software Foundation; either version 2.  of the License, or (at your
+% option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+% Public License for more details.
+%
+
+\documentclass[10pt,a4paper]{article}
+\usepackage[latin1,utf8]{inputenc}
+\usepackage[empty]{fullpage}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage[italic]{esdiff}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{fancybox}
+\usepackage{xspace}
+\usepackage{natbib}
+
+\parindent 0cm
+
+%\renewcommand{\baselinestretch}{0.8}
+
+\newcommand{\eq}[1]{Eq.~(\ref{#1})}
+\newcommand{\eqs}[2]{Eqs.~(\ref{#1}--\ref{#2})}
+\newcommand{\fig}[1]{Fig.~\ref{#1}}
+\newcommand{\figs}[2]{Figs.~\ref{#1}--\ref{#2}}
+\newcommand{\tab}[1]{Table.~{\ref{#1}}}
+
+\newcommand{\gaussian}{\ensuremath{\mathbf{N}}}
+\newcommand{\src}{\ensuremath{\mathcal{D}}}
+\newcommand{\mean}[1]{\ensuremath{\mathop{\mathrm{mean}}\{#1\}}}
+\newcommand{\var}[1]{\ensuremath{\mathop{\mathrm{var}}\{#1\}}}
+\newcommand{\cov}[1]{\ensuremath{\mathop{\mathrm{cov}}\{#1\}}}
+\newcommand{\sdev}[1]{\ensuremath{\mathop{\mathrm{sdev}}\{#1\}}}
+
+\newcommand{\OU}{\renewcommand{\OU}{O-U\xspace}Ornstein-Uhlenbeck (O-U)\xspace}
+\newcommand{\ODE}{\renewcommand{\ODE}{ODE\xspace}ordinary differential equation (ODE)\xspace}
+\newcommand{\PDE}{\renewcommand{\PDE}{PDE\xspace}partial differential equation (PDE)\xspace}
+\newcommand{\SDE}{\renewcommand{\SDE}{SDE\xspace}stochastic differential equation
+(SDE)\xspace}
+
+\newcommand{\comment}[1]{}
+
+\newlength{\mylength}
+
+\newenvironment{falign}%
+{\setlength{\fboxsep}{5pt}
+\setlength{\fboxrule}{0.5pt}
+\setlength{\mylength}{\textwidth}
+\addtolength{\mylength}{-2\fboxsep}
+\addtolength{\mylength}{-2\fboxrule}
+\Sbox
+\minipage{\mylength}%
+	\setlength{\abovedisplayskip}{-2\lineskip}
+	\setlength{\belowdisplayskip}{-2\lineskip}
+\align}%
+{\endalign\endminipage\endSbox
+\[\fbox{\TheSbox}\]}
+
+\def\matlab/{\textsc{Matlab}}
+
+\bibliographystyle{agu}
+
+
+\title{Note on numerical integration of stochastic differential equations}
+\author{Patrick Guio}
+\date{\normalsize$ $Date: 2010/07/01 18:06:20 $ $,~ $ $Revision: 1.44 $ $}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction to stochastic calculus}
+
+\subsection{Normal random variable}
+label{sub:normal}
+
+The normal or Gaussian random variable $Y=\gaussian(m,\sigma^2)$ has its 
+probability density function $P$ given by
+\begin{align}
+P(y)=\frac{1}{\sqrt{2\pi}\sigma}\exp\left(-\frac{(y-m)^2)}{2\sigma^2}\right).
+\end{align}
+The normal random variable has mean $\av{Y}=m$ and variance 
+$\av{Y^2}{-}\av{Y}^2=\sigma^2$. The normal random variable
+$\gaussian(0,1)\equiv N$ is referred as the unit normal random variable.
+The normal random variable $\gaussian(m,0)$ is the sure or deterministic
+variable $m$.
+
+It can be shown that for any two numbers $\alpha$ and $\beta$, the normal
+random variable has the following property \citep{gillespie:1996a}
+\begin{align}
+\alpha+\beta\gaussian(m,\beta) = N(\alpha+\beta m,\beta^2\beta^2).
+\label{eq:GaussP1}
+\end{align}
+In particular, we have for the unit normal random variable
+\begin{align}
+\alpha+\beta N(0,1) = \gaussian(\alpha,\beta^2).\label{eq:unitGaussP1}
+\end{align}
+
+It can also be shown that for two normal random variables 
+$\gaussian(m_1,\sigma_1^2)$ and $\gaussian(m_2,\sigma_2^2)$ that are
+statistically independent, we have 
+\begin{align}
+\gaussian(m_1,\sigma_1^2)+\gaussian(m_2,\sigma_2^2)=
+\gaussian(m_1+m_2,\sigma_1^2+\sigma_2^2).
+\label{eq:GaussP2}
+\end{align}
+Actually, the additive property of the means and variances holds for any
+statistically independent random variables. However among all classes of
+random variables with finite mean and variance, only normal random variables
+preserve their class under addition \citep{gillespie:1996a}.
+It follows from \eq{eq:GaussP1} and \eq{eq:GaussP2} that any linear
+combination of statistically independent normal random variables is itself
+normal.
+
+Last property of the normal random variable but not least, the central limit
+theorem asserts that the sum of any $n$ statistically independent (but not
+necessarily normal) random variables with finite means and variances will
+become a normal random variable in the limit $n\rightarrow\infty$.
+
+\subsection{Stochastic processes}
+\label{sub:stocproc}
+
+A stochastic process $X$ is a random variable with probability density
+function that depends parametrically on time $t$. In particular, if $t_1$
+and $t_2$ are two different random variables, then $X(t_1)$ and $X(t_2)$ are
+in general two different random variables. 
+A process $X$ is  a continuous memoryless stochastic process or a continuous
+Markov process if and only if the three conditions are satisfied
+\begin{enumerate}
+\item The increment in $X$ for any time $t$ to any infinitesimal later time
+$t{+}\dint{t}$ is memoryless, in the sense that it only depends on $t$,
+$t{+}\dint{t}$ and the value $X(t)$, thus we can define the conditional
+increment in $X$ by
+\begin{align}
+\Xi(dt;X(t),t) = X(t{+}\dint{t})-X(t).
+\end{align}
+\item the random variable $\Xi(dt;X(t),t)$ depends smoothly  on the three
+variable $\dint{t}$, $X(t)$ and $t$. 
+\item $X$ is continuous in the sense that $\Xi(dt;X(t),t)\rightarrow0$ as 
+$\dint{t}\rightarrow0$ for all $X(t)$ and $t$.
+\end{enumerate}
+
+It can be proved \citep{gillespie:1996a} that those three conditions for a
+continuous Markov process $X$ imply that the conditional increment $\Xi$ must
+have the analytical form
+\begin{align}
+\Xi(dt;X(t),t) = A(X(t),t)\dint{t}+D^{1/2}(X(t),t)N(t)(dt)^{1/2}
+\end{align}
+where $A$ and $D$ can be any two smooth functions of $X(t)$ and $t$, with
+$D$ non-negative and $N(t)$ is a temporally uncorrelated unit random
+variable, i.e.\ $N(t)$ is statistically independent of $N(t^\prime)$ when
+$t\neq t^\prime$.
+
+A sketch of the proof is to divide time interval $[t,t{+}\dint{t}[$ into $n$
+equal subintervals, and then demand that the conditional increments in those
+subintervals add together so that give the conditional increment over the full
+interval.
+Letting $n\rightarrow\infty$ implies the normality of random variable $N(t)$
+and the peculiar square root of $\dint{t}$, arises here because in adding
+statistically independent random variables one must add the variances rather
+than the standard deviations. 
+
+Inserting the definition of $\Xi$ we can derive the standard form Langevin
+equation for the process $X$
+\begin{align}
+X(t{+}\dint{t}) = X(t)+ A(X(t),t)\dint{t}+D^{1/2}(X(t),t)N(t)(dt)^{1/2}.
+\label{eq:Langevin}
+\end{align}
+The function $A(X(t),t)$ is called the drift function of the process and the
+function $D$ is called the diffusion function.
+It is worth noting that it might look like we ought to drop the $\dint{t}$
+term from the r.h.s.\ of \eq{eq:Langevin} since it vanishes  quicker than the
+$\dint{t}^{1/2}$ term.  That proves to be wrong since the $\dint{t}^{1/2}$ is
+multiplied by the random variable $N(t)$, which is as often negative as
+positive and therefore greatly diminishes the effect of the $\dint{t}^{1/2}$
+term over a succession of many $\dint{t}$ increments. In simple words, the
+long term of the weak but steady $\dint{t}$ term and the strongly but erratic
+$\dint{t}^{1/2}$ are comparable if the functions $A$ and $D$ are of
+comparable magnitudes.
+
+If we simply substitute, in \eq{eq:Langevin}, $N(t)$ by a sample value of
+the random variable $\gaussian(0,1)$ and carry out the arithmetic of the
+equation, we can actually use this equation as an update formula for
+numerically simulating $X(t)$.
+
+It is also worth emphasise here that although the process $X$ defined by
+\eq{eq:Langevin} is continuous, it is not in general differentiable. This is
+seen by rearranging the Langevin equation to read
+\begin{align}
+\frac{X(t{+}\dint{t}){-}X(t)}{\dint{t}} =  A(X(t),t)+
+\frac{D^{1/2}(X(t),t)N(t)}{(dt)^{1/2}}.
+\end{align}
+and letting $\dint{t}\rightarrow0$. The r.h.s.\ of this equation and therefore
+the differential of $X$ in a classical sense will not exist unless the
+diffusion $D$ identically (and $X$ is deterministic), or the diffusion
+function increases somehow $\sim t^{1/2}$ and is not dependent on
+$X(t)$.  A truly stochastic continuous Markov process is an example of a function
+that is everywhere continuous but nowhere differentiable.
+
+\subsection{Fokker-Planck equation}
+
+It can be shown by means of a rather lengthy argument that the probability
+density function $P(x;t)$ of the random variable $X(t)$ defined by
+\eq{eq:Langevin} satisfies the following \PDE \citep{gillespie:1996a}
+\begin{align}
+\diffp{}{t}P(x;t) = -\diffp{}{x}\left[A(x,t)P(x;t)\right]
++\frac{1}{2}\diffp[2]{}{x}\left[D(x,t)P(x;t)\right].
+\label{eq:ffokkerplanck}
+\end{align}
+Indeed it is more accurate to define $P(x;t)$ as 
+$P(x;t|x_0,t_0)$, i.e.\ the probability $P(x;t|x_0, t_0)\dint{x}$ of finding 
+$X(t)$ with $t\geq t_0$ and between $x$ and $x{+}\dint{x}$ given the initial 
+point (or initial condition) $X(t_0)=x_0$.
+This equation is referred as the forward Fokker-Planck equation. It describes,
+as the Langevin equation, the time-evolution of the continuous Markov process
+$X(t)$ with drift function $A$ and diffusion function $D$ in terms of its
+probability density function $P(x;t)$.
+\eq{eq:ffokkerplanck} can be used to derive time-evolution equations for the
+moments of the process $X$, although the Langevin is usually handier. 
+It can also be used to compute the stationary or equilibrium probability
+density function $P(x;t\rightarrow\infty|x_0, t_0)$, which for some
+function $A$ and $D$ exists independently of $t$, $X(t_0)$ and $t_0$
+\citep{gillespie:1996c}, as for example Langmuir strong turbulence \citep{?}.
+
+The density probability function $P$ also satisfies the \PDE
+\begin{align}
+-\diffp{}{{t_0}}P(x;t|x_0, t_0) = A(x_0,t_0)\diffp{}{{x_0}}P(x;t|x_0, t_0)
++\frac{1}{2}D(x_0,t_0)\diffp[2]{}{{x_0}}P(x;t|x_0, t_0).
+\label{eq:bfokkerplanck}
+\end{align}
+This equation, referred as the backward Fokker-Planck equation, is not a
+simple corollary of \eq{eq:ffokkerplanck}, and is crucial to calculate the
+statistics of the time it takes for the process to first exit a given
+interval $[a,b]$ containing the initial point $x_0$.
+
+
+\subsection{Wiener process and Brownian motion}
+
+The standard Brownian motion or standard driftless Wiener process $W(t)$
+is a random variable that satisfies the following three conditions
+\citep{higham:2001}
+\begin{enumerate}
+\item $W(0) = 0$ (with probability 1).
+\item For $0\leq s < t $ the random variable given by the increment
+$W(t){-}W(s)$ is normally distributed with mean zero and variance $t{-}s$; 
+equivalently, $W(t){-}W(s) \sim \sqrt{t{-}s}\gaussian(0,1)$, where 
+$\gaussian(0,1)$ is a normally distributed random variable with zero
+mean and unit variance, i.e.\ the unit normal random variable.
+\item For $0\leq s<t<u<v$ the increments $W(t){-}W(s)$ and $W(v){-}W(u)$
+are independent.
+\end{enumerate}
+The process $W$ is therefore a Markov process (see the three conditions in 
+sec.~\ref{sub:stocproc}). It can be defined in term of the standard form
+Langevin equation in its update form \eq{eq:Langevin} \citep{gillespie:1996a}
+\begin{align}
+W(t{+}dt) = W(t) + N(t)(dt)^{1/2}, \label{eq:Wiener1}
+\end{align}
+or introducing the difference conditional increment 
+$\dint{W(t)}\equiv W(t{+}dt){-}W(t)$ \citep{gillespie:1996c}
+\begin{align}
+\dint{W(t)} = N(t)(dt)^{1/2}, \label{eq:Wiener1a}
+\end{align}
+where as usual $dt$ is a non-negative infinitesimal, and $N(t)$ is a
+temporally uncorrelated unit normal random variable, i.e.\ such that
+$N(t)=\gaussian(0,1)$ and such that $N(t)$ is statistically independent of
+$N(t^\prime)$ if $t\neq t^\prime$.
+
+Note that we are not allowed to write $dW(t)/dt$, since Brownian motion
+as all Markov processes are nowhere differentiable with probability 1,
+But we can use the following trick or mnemonic. 
+Let us rewrite $N(t)/(dt)^{1/2}$ using \eq{eq:unitGaussP1} as 
+$N(t)/(dt)^{1/2}=(dt)^{-1/2}\gaussian(0,1)=\gaussian(0,1/dt)$, and
+let us define the Gaussian white noise process $\Gamma(t)$ as the following
+limit \citep{gillespie:1996a}
+\begin{align}
+\Gamma(t) = \lim_{dt\rightarrow0} N(0,1/dt),
+\end{align}
+then we can formally obtain a differential formulation for the Wiener process
+\begin{align}
+\lim_{dt\rightarrow0} \frac{W(t{+}dt)-W(t)}{dt} =
+\diff{W}{t} = \Gamma(t). \label{eq:Wiener2}
+\end{align}
+The averaged properties of the Gaussian white noise $\Gamma$ follow
+\begin{align}
+\av{\Gamma(t)} = 0, \quad\text{and}\quad \av{\Gamma(t)\Gamma(t{+}t^\prime)} =
+\delta(t^\prime)
+\end{align}
+where $\delta$ is the Dirac function. We can also write the averaged
+properties for $N(t)$
+\begin{align}
+\av{N(t)} = 0, \quad\text{and}\quad \av{N^2(t)} = 1,
+\quad\text{and}\quad \av{W(t^\prime)N(t)} = 0\quad\text{for all}\quad
+t^\prime\leq t.
+\end{align}
+Finally, if we consider the Markov process $X(t)$ written as a Langevin
+\SDE \citep{oksendal:2000}
+\begin{align}
+\dint{X(t)}=A(X(t),t)+B(X(t),t)\dint{W(t)}
+\end{align}
+we get the following averaged properties for $\dint{W(t)}$
+\begin{align}
+\av{\dint{W(t)}} = 0, \quad\text{and}\quad \av{(\dint{W(t))^2}} = dt,
+\quad\text{and}\quad \av{X(t^\prime)\dint{W(t)}} = 0\quad\text{for all}\quad
+t^\prime\leq t.
+\end{align}
+
+\subsection{Ornstein-Uhlenbeck process}
+
+The \OU process \citep{uhlenbeck:1930} also known as the mean
+reverting process in financial modelling, is a Markov stochastic process $X(t)$
+defined by the following autonomous Langevin \SDE
+\begin{falign}
+\dint{X(t)}&=\frac{1}{\tau}(\mu-X(t))\dint{t} + c^{1/2} \dint{W(t)}
+\label{eq:ou}
+\end{falign}
+where $\tau>0$, $\mu$ and $c>0$ are parameters and $W(t)$ denotes the
+Wiener process. $\tau$ and $c$ are the relaxation time and the
+diffusion constant. 
+
+In financial mathematics $\mu$ represents the
+equilibrium or mean value supported by fundamentals, $c^2$ the degree of
+volatility around it caused by shocks, and $1/\tau$ the rate by which shocks
+dissipate and the variable reverts toward the mean.
+
+The \OU process is an example of a Gaussian process that has a bounded
+variance and admits a stationary probability distribution, in contrast to
+the Wiener process \citep{gillespie:1996a}. 
+The difference between the two is in their drift term.
+For the Wiener process the drift term is constant whereas for the \OU
+process it is dependent on the current value of the process. If the current
+value of the process is less than the (long term) mean, i.e.\ for
+$t\rightarrow\infty$, the drift will be positive, if the current value of the 
+process is greater than the (long term) mean, the drift will be negative. 
+In other words, the mean acts as an
+equilibrium level for the process. This gives the process its informative
+name, ``mean-reverting''.
+
+A sketch for the proof that the \OU process is a Gaussian process is to
+observe that $X(t{+}\dint{t})$ is expressed as a linear combination of $X(t)$
+and $N(t)$. For $t=t_0$ those two random variables are statistically
+independent and normal (since $X(t_0)=x_0=\gaussian(x_0,0)$), so by
+\eq{eq:GaussP1} and \eq{eq:GaussP2}, $X(t_0{+}\dint{t})$ must be normal.
+Then $X(t_0{+}2\dint{t})$ for the same reason, i.e.\ a combination of
+$X(t_0{+}\dint{t})$ and $N(t_0{+}\dint{t})$, must also  be normal. By
+induction, we infer that the \OU process $X(t)$ is normal for all $t>t_0$.
+
+To find the mean of the normal random variable $X(t)$, we can divide
+\eq{eq:ou} by $dt$, let $dt\rightarrow0$ and take the average (remembering
+that $\av{\Gamma(t)}=0$) to get an \ODE for $\av{X(t)}$ 
+\begin{align}
+\diff{\av{X(t)}}{t}&=\frac{1}{\tau}(\mu-\av{X(t)}), 
+\end{align}
+whose solution for the initial condition $\av{X(t_0)}=x_0$ is
+\begin{falign}
+\av{X(t)}&= \mu + (x_0{-}\mu)e^{-(t-t_0)/\tau},\quad\text{for}\quad t\geq t_0.
+\label{eq:oumeaneq}
+\end{falign}
+Next, we can square \eq{eq:ou}, retain the first order in $dt$, 
+take the average (remembering that $\av{X(t)\dint{W(t)}}=0$ and 
+$\av{(\dint{W(t)})^2}=dt$, divide by $dt$, let $dt\rightarrow0$ to get an 
+an \ODE for $\av{X^2(t)}$
+\begin{align}
+\diff{}{t}\av{X^2(t)}&=\frac{2}{\tau}(\mu\av{X(t)}-\av{X^2(t)})+c,\\
+\diff{}{t}{\av{X^2(t)}}&=\frac{2}{\tau}(\mu^2{+}\mu(x_0{-}\mu)e^{-(t-t_0)/\tau}
+-\av{X^2(t)})+c,
+\end{align}
+whose solution for the initial condition $\av{X(t_0)^2}=x_0^2$ is
+\begin{align}
+\av{X^2(t)} = \left(-\frac{c\tau}{2}+(x_0{-}\mu)^2\right)e^{-2(t-t_0)/\tau}
++\frac{c\tau}{2}+\mu^2+2\mu(x_0{-}\mu)e^{-(t-t_0)/\tau}
+\label{eq:oumean}
+\end{align}
+and therefore the variance is 
+\begin{falign}
+\var{X(t)} & = \av{X(t)^2}-\av{X(t)}^2 = \frac{c\tau}{2}
+\left(1-e^{-2(t-t_0)/\tau}\right)
+\label{eq:ouvar}
+\end{falign}
+Similarly, in order to calculate the covariance we consider \eq{eq:ou} with
+$t{=}t_2$ and multiply by $X(t_1)$ assuming $t_0\leq t_1\leq t_2$, take the
+average (remembering that $\av{X(t_1)\dint{W(t_2)}}=0$, divide by $dt_2$, let
+$dt_2\rightarrow0$ to get an an \ODE for $\av{X(t_1)X(t_2)}$
+\begin{align}
+\diff{}{t_2}{\av{X(t_1)X(t_2)}} &=  \frac{1}{\tau}
+\left(\mu\av{X(t_1)}-\av{X(t_1)X(t_2)}\right),\\
+\diff{}{t_2}{\av{X(t_1)X(t_2)}} &=  \frac{1}{\tau}
+\left(\mu^2+\mu(x_0-\mu)e^{-(t_1-t_0)/\tau}-\av{X(t_1)X(t_2)}\right)
+\end{align}
+whose solution for the initial condition given by \eq{eq:oumean} for $t=t_1$ is 
+\begin{align}
+\begin{split}
+\av{X(t_1)X(t_2)} &= \left[
+\left(-\frac{c\tau}{2}+(x_0{-}\mu)^2\right)e^{-(t_1-t_0)/\tau}+
+\frac{c\tau}{2}e^{(t_1-t_0)/\tau}+\mu(x_0{-}\mu)\right]e^{-(t_2-t_0)/\tau}\\
+&\quad\; + \mu^2+\mu(x_0{-}\mu)e^{-(t_1-t_0)/\tau}.
+\end{split}
+\end{align}
+and therefore the covariance is
+\begin{align}
+\cov{X(t_1),X(t_2)} & = \av{X(t_1)X(t_2)}-\av{X(t_1)}\av{X(t_2)} \\
+& =  \frac{c\tau}{2}
+\left(e^{[(t_1{-}t_0)-(t_2{-}t_0)]/\tau}-
+e^{[-(t_1{-}t_0)-(t_2{-}t_0)]/\tau}\right)\\
+& = \frac{c\tau}{2}e^{-(t_2-t_1)/\tau}\left(1-e^{-2(t_1-t_0)/\tau}\right)
+\label{eq:oucovar}
+\end{align}
+
+The stationary long term mean $\av{X}$ and variance $\var{X}$
+of the \OU process (i.e. for $t\rightarrow\infty$) are then given by
+\begin{align}
+\av{X}  = \mu, \quad\text{and}\quad \var{X}  = \frac{c\tau}{2}, 
+\end{align}
+For the long term covariance, i.e.\ when $t_1{-}t_0\gg\tau$, it can be seen
+from \eq{eq:oucovar} that $X(t_1)$ and $X(t_2)$ will be highly correlated or
+effectively uncorrelated according to whether $t_2{-}t_1$ is much less than
+or much greater than $\tau$. The relaxation time can also be regarded as a
+decorrelation time for the \OU process.
+
+For many continuous Markov processes, a finite difference of the Langevin
+update formula such as the Euler-Maruyama scheme is about the best that one
+can do 
+\begin{falign}
+X(h) \approx X(0) +\left(\mu-X(0)\right)\frac{h}{\tau} + \sqrt{ch}n.
+\label{eq:ouapprox}
+\end{falign}
+Here $n$ denotes a sample value of the random variable $N(t)=\gaussian(0,1)$.
+This approximation becomes exact in the limit $h\rightarrow0$ but
+it breaks the larger $h$ compares to $\tau$.
+
+Since the \OU process is a Gaussian process with known mean and variance for
+all time it can be written in term of $\gaussian$ directly 
+providing an exact update formula which allows
+to simulate it numerically with arbitrary time steps given the initial value
+$x_0$ at time $t_0$ \citep{gillespie:1996a,gillespie:1996b}
+\begin{align}
+X(h) = \gaussian\left(\mu+(X(0)-\mu)e^{-h/\tau},
+\frac{c\tau}{2}\left(1-e^{-2h/\tau}\right)\right)
+\end{align}
+and therefore it can be inferred using \eq{eq:GaussP1} that
+\begin{falign}
+X(h) = \mu+\left(X(0)-\mu\right)e^{-h/\tau}+
+\left[\frac{c\tau}{2}\left(1-e^{-2h/\tau}\right)\right]^{1/2}n
+\label{eq:ouexact}
+\end{falign}
+which is the exact \OU update formula. It is easy to see that when
+$h\ll\tau$, then \eq{eq:ouexact} reduces to first order in $h$, to the
+approximate update formula \eq{eq:ouapprox}.
+
+\begin{figure}[ht]
+\centering\includegraphics[width=0.8\columnwidth]{OUsimu1}
+\caption{Results of numerical simulations of the \OU process scaled to the
+long term standard deviation $\sqrt{c\tau/2}$ using the two numerical
+schemes described by \eq{eq:ouapprox} and \eq{eq:ouexact} with $\mu=0$
+and $X(0)=0$. The red line is for an integration path, the blue lines
+represent the empirical mean and one-standard deviation envelope 
+$\av{X(t)}\pm\sdev{X(t)}$ while the black lines
+are for the theoretical envelope given by the mean \eq{eq:oumean} and
+variance \eq{eq:ouvar}.  }
+\label{fig:OUsimu1}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[height=0.24\textheight]{OUsimu2}
+\includegraphics[height=0.24\textheight]{OUsimu3}
+\caption{Same as \fig{fig:OUsimu1}. Left panel is for $h\approx1.5\tau$
+and right panel is for $h\approx2\tau$. Note how the statistics of 
+the Euler-Maruyama scheme is getting degraded as $h\gg\tau$. }
+\label{fig:OUsimu2}
+\end{figure}
+
+In \figs{fig:OUsimu1}{fig:OUsimu2} we show the results of three numerical
+simulations of the \OU process, all computed using the 
+Euler-Maruyama approximate scheme given by \eq{eq:ouapprox} and the
+exact update algorithm (lower panels) given by \eq{eq:ouexact}. The jagged
+red curve is the simulation of a realisation of the \OU
+process $X(t)$ trajectory.
+
+\section{Complex ordinary differential equation}
+
+Let us consider the following complex \ODE corresponding to the electric
+field $E$ of a Langmuir wave mode with damping $\nu$ and wave number $k$.
+\begin{align}
+\diff{E}{t}+(\nu+ik^2) E = 0, \label{eq:zake}
+\end{align}
+where $\nu$ and $k$ are real constants with $\nu>0$. \eq{eq:zake} is given in
+its integral form by
+\begin{align}
+E(t) = E(0)e^{-(\nu{+}ik^2)t}.
+\end{align}
+
+For sufficiently small time step (i.e.\ $h/\nu\ll1$ and $h/k^2\ll1$), we can
+derive an update formula \citep{gillespie:1996a} corresponding to the
+Euler approximation scheme to integrate \eq{eq:zake} numerically as
+\begin{align}
+E(h) \approx E(0) -(\nu+ik^2) E_t h, \label{eq:Ekeuler}
+\end{align}
+But $E(0)$ is integrated \emph{exactly} one iteration ahead to $E(h)$ with
+time step $h$  using the recurrence relation
+\begin{align}
+E(0) = E(0)\exp\left(-(\nu+ik^2)h\right).
+\label{eq:Eknum}
+\end{align}
+
+\subsection{Stochastically forced equation}
+Now let us recast \eq{eq:zake} into a stochastic equation, the Itô \SDE 
+driven by an additive noise modelled by two independent temporally 
+Gaussian white noises $\Gamma_1(t)$ and $\Gamma_2(t)$,
+i.e.\ such that $\av{\Gamma_i(t_1)\Gamma_j(t_2)}=\delta_{ij}\delta(t_1-t_2)$
+\citep{farrell:1996,gillespie:1996c,oksendal:2000}
+\begin{align}
+\diff{E}{t}+(\nu+ik^2) E = \src\left(\Gamma_1(t) + i\Gamma_2(t)\right),
+\label{eq:sdeE1} 
+\end{align}
+or written in term of the Wiener processes $W_1$ and $W_2$ as a Langevin
+\SDE
+\begin{align}
+\dint{E}  -(\nu+ik^2)E\dint{t}+\src\left(\dint{W_1(t)}+i\dint{W_2(t)}\right),
+\label{eq:sdeE}
+\end{align}
+where $\src>0$ represent the forcing of the \SDE. 
+
+Let us separate this update equation for $E$ \eq{eq:sdeE} into
+its real and imaginary parts, and then treat the resulting two updating
+formulae as components of a bi variate continuous Markov process
+\citep{gillespie:1996c}.
+
+Let us define the bi variate process $\vec{X}(t)$ and the vector of
+independent normal random variables $\dint{\vec{W}}(t)$
+\begin{align}
+\vec{X}=\begin{pmatrix}X_1\\X_2\end{pmatrix}
+\equiv\begin{pmatrix}\Re{E}\\\Im{E}\end{pmatrix},\quad\text{and}\quad
+\dint{\vec{W}}\equiv\begin{pmatrix}\dint{W_1}\\\dint{W_2}\end{pmatrix}.
+\end{align}
+\eq{eq:sdeE} is rewritten as
+\begin{align}
+\dint{X_1}(t) &= -\nu X_1(t)\dint{t} +k^2X_2(t)\dint{t} + \src\dint{W_1},
+\label{eq:x1}\\
+\dint{X_2}(t) &= -k^2 X_1(t)\dint{t} -\nu X_2(t)\dint{t} + \src\dint{W_2},
+\label{eq:x2}
+\end{align}
+or equivalently in matrix form \citep{farrell:1996}
+\begin{align}
+\dint{\vec{X}}=\mathbf{A}\vec{X}\dint{t}+\mathbf{F}\dint{\vec{W}}.
+\end{align}
+where we have defined the antisymmetric matrix $\mathbf{A}$ and diagonal
+matrix $\mathbf{F}$
+\begin{align}
+\mathbf{A}=\begin{pmatrix}{-}\nu&k^2\\{-}k^2&{-}\nu\end{pmatrix},\
+\quad\text{and}\quad
+\mathbf{F}=\begin{pmatrix}\src&0\\0&\src\end{pmatrix}
+\end{align}
+
+This process appears to be a well-defined bi variate continuous Markov process.
+This bi variate process. The linearity of those equations in the process
+components imply that all will be statistically dependent normal random
+variables, similar to the \OU process and its integral
+\citep{gillespie:1996a,gillespie:1996b}.
+
+Let us derive expressions for the mean, variance and
+covariance of those two processes. That will constitute a complete
+solution.
+To find the mean of the normal random variables $X_1$ and $X_2$, we can
+divide \eqs{eq:x1}{eq:x2} by $dt$, let $dt\rightarrow0$ and take the average
+(remembering that $\av{\Gamma_i(t)}=0$ to get the system of \ODE for
+$\av{X_1}$ and $\av{X2}$.
+\begin{align}
+\diff{}{t}{\av{X_1(t)}} &= -\nu\av{X_1(t)} +k^2\av{X_2(t)}, \label{eq:meanx1}\\
+\diff{}{t}{\av{X_2(t)}} &= -k^2\av{X_1(t)} -\nu\av{X_2(t)}, \label{eq:meanx2}
+\end{align}
+whose solution for the initial condition $\av{X_1(0)}=x_{10}$
+and $\av{X_2(0)}=x_{20}$ is 
+\begin{falign}
+\av{X_1(t)} + i \av{X_2(t)} &= (x_{10}+ix_{20})e^{-(\nu +ik^2)t}.
+\end{falign}
+In polar form and introducing the modulus $r_0$ and phase $\phi_0$ of the
+initial condition $x_{10}+ix_{20}$, the mean reads
+\begin{falign}
+\av{X_1(t)} + i \av{X_2(t)} &= r_0e^{-\nu t}e^{i(\phi_0{-}k^2t)}.
+\end{falign}
+i.e.\ the mean of the complex \OU process is complex and has its modulus
+scaled by $e^{-\nu t}$ while its phase is shifted by ${-}k^2t$. 
+The mean of the complex \OU process can also be written
+in bivariate form by separating real and imaginary parts
+\begin{align}
+\av{X_1(t)} &= e^{-\nu t}\left(x_{10}\cos(k^2t)+x_{20}\sin(k^2t)\right),\\
+\av{X_2(t)} &= e^{-\nu t}\left(-x_{10}\sin(k^2t)+x_{20}\cos(k^2t)\right).
+\end{align}
+
+Next, we can square \eqs{eq:x1}{eq:x2}, retain the first order in $dt$,
+take the average (remembering that $\av{X_i(t)\dint{W_j(t)}}=0$ and
+$\av{(\dint{W_i(t)})^2}=dt$, divide by $dt$, let $dt\rightarrow0$ to get an
+a system of \ODE for $\av{X_1^2(t)}$, $\av{X_2^2(t)}$ and $\av{X_1(t)X_2(t)}$
+\begin{align}
+\diff{}{t}{\av{X_1^2(t)}} &= -2\nu\av{X_1^2(t)}+k^2\av{X_1(t)X_2(t)}+\src^2,
+\label{eq:m2x1}\\
+\diff{}{t}{\av{X_2^2(t)}} &= -2\nu\av{X_2^2(t)}-k^2\av{X_1(t)X_2(t)}+\src^2,
+\label{eq:m2x2}\\
+\diff{}{t}{\av{X_1(t)X_2(t)}} &=
+-2\nu\av{X_1(t)X_2(t)}+k^2(\av{X_2^2(t)}-\av{X_1^2(t)})
+\label{eq:m2x1x2}\
+\end{align}
+The eigenvalues and eigenvectors vectors are
+\begin{align}
+\lambda_1 &= -2\nu-i\sqrt{2}k^2,&\quad
+\vec{g}_1 &=\begin{pmatrix}1,&-1,&-i\sqrt{2}\end{pmatrix},\\
+\lambda_2 &= -2\nu+i\sqrt{2}k^2 = \cc{\lambda_1},&\quad
+\vec{g}_2 &=\begin{pmatrix}1,&-1,&i\sqrt{2}\end{pmatrix},\\
+\lambda_3 &= -2\nu,&\quad
+\vec{g}_3 &=\begin{pmatrix}1,&1,&0\end{pmatrix}
+\end{align}
+A solution for the homogeneous equations is written
+\begin{align}
+\av{X_1^2(t)} &= 
+Ae^{\lambda_1 t} +Be^{\cc{\lambda}_1 t}+Ce^{\lambda_3 t},\\
+\av{X_2^2(t)} &= 
+-Ae^{\lambda_1 t} -Be^{\cc{\lambda}_1 t}+Ce^{\lambda_3 t},\\
+\av{X_1(t)X_2(t)} &= 
+-Ai\sqrt{2}e^{\lambda_1 t} +Bi\sqrt{2}e^{\cc{\lambda}_1 t},
+\end{align}
+where $A$, $B$ and $C$ are constants.
+A solution to the inhomogeneous equation can be found by setting
+$A=B=0$ and looking for a solution such that
+\begin{align}
+\av{X_1^2(t)} &= C(t)e^{2\nu t},\\
+\av{X_2^2(t)} &= C(t)e^{2\nu t},\\
+\av{X_1(t)X_2(t)} &= 0,
+\end{align}
+which leads to the complete set of solutions 
+\begin{align}
+\av{X_1^2(t)} &= 
+Ae^{\lambda_1 t}+Be^{\cc{\lambda}_1 t}+Ce^{\lambda_3 t}+\frac{\src^2}{2\nu},\\
+\av{X_2^2(t)} &= 
+-Ae^{\lambda_1 t}-Be^{\cc{\lambda}_1 t}+Ce^{\lambda_3 t}+\frac{\src^2}{2\nu},\\
+\av{X_1(t)X_2(t)} &= 
+-Ai\sqrt{2}e^{\lambda_1 t} +Bi\sqrt{2}e^{\cc{\lambda}_1 t},
+\end{align}
+For the initial condition $\av{X_1^2(0)}=x_{10}^2$,
+$\av{X_2^2(0)}=x_{20}^2$ and $\av{X_1(0)X_2(0)}=x_{10}x_{20}$
+the constants are 
+\begin{align}
+A &= \frac{1}{4}\left(x_{10}^2-x_{20}^2\right)
++i\frac{\sqrt{2}}{4}x_{10}x_{20},\\
+B &= \frac{1}{4}\left(x_{10}^2-x_{20}^2\right)
+-i\frac{\sqrt{2}}{4}x_{10}x_{20} = \cc{A},\\
+C &= \frac{1}{2}\left(x_{10}^2+x_{20}^2-\frac{\src^2}{2}\right).
+\end{align}
+andthe following expressions
+\begin{align}
+\av{X_1^2(t)} &= \frac{e^{-2\nu t}}{2}\left[x_{10}^2{+}x_{20}^2{+}
+(x_{10}^2{-}x_{20}^2)\cos(\sqrt{2}k^2t){-}\sqrt{2}x_{10}x_{20}\sin(\sqrt{2}k^2t)
+\right]+
+\frac{\src^2}{2\nu}\left(1{-}e^{-2\nu t}\right),\\
+\av{X_2^2(t)} &= \frac{e^{-2\nu t}}{2}\left[x_{10}^2{+}x_{20}^2{-}
+(x_{10}^2{-}x_{20}^2)\cos(\sqrt{2}k^2t){+}\sqrt{2}x_{10}x_{20}\sin(\sqrt{2}k^2t)
+\right]+
+\frac{\src^2}{2\nu}\left(1{-}e^{-2\nu t}\right),\\
+\av{X_1(t)X_2(t)} &= \frac{e^{-2\nu t}}{2}\left[
+%\sqrt{2}(x_{10}^2{-}2x_{20}^2)\sin(\sqrt{2}k^2t){+}
+2x_{10}x_{20}\cos(\sqrt{2}k^2t)
+\right]
+\end{align}
+And together with the following expressions for the square of the real and
+imagniry parts mean  as well as their product
+\begin{align}
+\av{X_1(t)}^2 &= e^{-2\nu t}\left(
+x_{10}^2\cos^2(k^2t){+}x_{20}^2\sin^2(k^2t){+}
+2x_{10}x_{20}\cos(k^2t)\sin(k^2t) \right),\\
+\av{X_2(t)}^2 &= e^{-2\nu t}\left(
+x_{10}^2\sin^2(k^2t){+}x_{20}^2\cos^2(k^2t){-}
+2x_{10}x_{20}\cos(k^2t)\sin(k^2t) \right),\\
+\av{X_1(t)}\av{X_2(t)} &= e^{-2\nu t}\left(
+{-}(x_{10}^2{-}x_{20}^2)\cos(k^2t)\sin(k^2t){+}x_{10}x_{20}
+(\cos^2(k^2t){-}\sin^2(k^2t))\right).
+\end{align}
+we can calculate the variance and covariance of the real and imaginary parts 
+\begin{align}
+\var{X_1^2(t)} &= \av{X_1^2(t)}-\av{X_1(t)}^2,\\
+\var{X_2^2(t)} &= \av{X_2^2(t)}-\av{X_2(t)}^2,\\
+\cov{X_1(t),X_2(t)} &= \av{X_1(t)X_2(t)}-\av{X_1(t)}\av{X_2(t)}.
+\end{align}
+
+Note that the stationary long term mean, variance and covariance 
+(i.e.\ for $t\rightarrow\infty$) of the complex \OU process given
+by equation \eq{eq:sdeE} are therefore given by 
+\begin{align}
+\av{X_1} = 0,\quad\text{and}\quad\var{X_1} &= \frac{\src^2}{2\nu}\\
+\av{X_2} = 0,\quad\text{and}\quad\var{X_2} &= \frac{\src^2}{2\nu}\\
+\cov{X_1(t),X_2(t)} &= 0.
+\end{align}
+
+Then it is possible to show that if $N_1$ and $N_2$
+are two statistically independant unit normal random variables, the the two
+random variables $X_1$ and $X_2$ defined by \citep{gillespie:1996c}
+\begin{align}
+X_1 &= m_1+\sigma_1N_1,\\
+X_2 &= m_2+\left(\sigma_2^2{-}\frac{\kappa_{12}^2}{\sigma_1^2}\right)^{1/2}N_2
++ \frac{\kappa_{12}}{\sigma_1}N_1
+\end{align}
+will be normal with respective means $m_1$ and $m_2$, respective variance
+$\sigma_1^2$ and $\sigma_2^2$ and covariance $\kappa_{12}$. 
+\comment{
+It is also equivalent to
+\begin{align}
+X_1 &= m_1+\left(\sigma_1^2{-}\frac{\kappa_{12}^2}{\sigma_2^2}\right)^{1/2}N_1
++\frac{\kappa_{12}}{2\sigma_1}N_2 ,\\
+X_2 &=
+m_2+\left(\sigma_2^2{-}\frac{\kappa_{12}^2}{\sigma_1^2}\right)^{1/2}N_2
++ \frac{\kappa_{12}}{\sigma_1}N_1
+\end{align}
+}
+
+The complex \OU process has an exact update formula which allow to simulate
+numerically with arbitrary time steps given an initial value $x_{10}+ix_{20}$
+\begin{align}
+X_1(h)+iX_2(h) = \gaussian\left(\left(X_1(0)+iX_2(0)\right)e^{-(\nu+ik^2)t},
+\frac{\src^2}{2\nu}\left(1-e^{-2\nu(t-t_0)}\right)\right)
+\end{align}
+and using the properties \eq{eq:GaussP1} and \eq{eq:GaussP2} it can be
+inferred that
+\begin{align}
+X_1(h)+iX_2(h) = \left(X_1(0)+iX_2(0)\right)e^{-(\nu+ik^2)t}+
+\gaussian\left(1-e^{-2\nu(t-t_0)}\right)+
+i\gaussian\left(1-e^{-2\nu(t-t_0)}\right)
+\label{eq:oucexact}
+\end{align}
+which is the exact \OU update formula for the complex \OU process. It is easy
+to see that when $h\ll\tau$, \eq{eq:oucexact} reduces to the first order
+approximate.
+
+\subsection{Calculation of the variance $\av{|E|^2}$}
+\begin{align}
+\text{Posing}\qquad\vec{X}=\begin{pmatrix}\Re{E}\\\Im{E}\end{pmatrix}
+\qquad\text{and}\qquad
+\dint{\vec{W}}\equiv
+\begin{pmatrix}\dint{W_1}\\\dint{W_2}\end{pmatrix}.
+\end{align}
+\eq{eq:sdeE} is written in matrix form as a two-dimensional real It\^o equation
+\begin{align}
+\dint{\vec{X}}=
+\begin{pmatrix}{-}\nu&k^2\\{-}k^2&{-}\nu\end{pmatrix}\vec{X}\dint{t}+
+\begin{pmatrix}\src&0\\0&\src\end{pmatrix}\dint{\vec{W}},
+\end{align}
+and making use of the multi-dimensional It\^o-formula \citep{oksendal:2000},
+we get
+\begin{align}
+\dint{(\vec{X}\transpose{\vec{X}})} = & \;
+2X_1\dint{X_1}+2X_2\dint{X_2}+(\dint{X_1})^2+(\dint{X_2})^2\\
+\begin{split}
+=&\; 2X_1\left(\left(-\nu_eX_1{-}k^2X_2\right)\dint{t}+
+\src\dint{W_1}\right)+\\
+&\; 2X_2\left(\left(k^2X_1{-}\nu_eX_2\right)\dint{t}+
+\src\dint{W_2}\right)+
+\src^2(\dint{W_1})^2{+}\src^2(\dint{W_2})^2.
+\end{split}
+\end{align}
+Taking the average of this equation
+Using Itô calculus techniques \citep{farrell:1996}
+we derive the following differential equation
+for the variance $\av{|E|^2}$
+\begin{align}
+\dint{\av{|E(t)|^2}} = -2\nu\av{|E(t)|^2}\dint{t}+2\src^2\dint{t}
+\end{align}
+with analytic solution
+\begin{align}
+\av{|E(t)|^2} = \exp(-2\nu t)\av{|E(0)|^2} + \frac{\src^2}{\nu}\left(1-\exp(-2\nu t)\right)
+\label{eq:sde0a}
+\end{align}
+and the asymptotic behaviour
+\begin{align}
+\lim_{t\rightarrow\infty}\av{|E(t)|^2} = \frac{\src^2}{\nu}
+\end{align}
+
+For our physical problem the forcing constant $\src$ and the initial electric
+field $E(0)$ are specified by
+\begin{align}
+\src&=\sqrt{\nu\sigma}\\
+\av{|E(0)|^2}&=\sigma
+\end{align}
+where $\sigma$ is a positive real constant representing the thermal noise level. With these
+assumption the variance remains constant for all times and the process is
+ergodic
+\begin{align}
+\av{|E(t)|^2} = \sigma, \quad \mbox{for all } t.
+\end{align}
+
+Note that we could also have calculated the differential equation governing
+the averaged matrix $\av{(\vec{X}\transpose{\vec{X}})}$ from the stochastic
+differential equation 
+\begin{align}
+\dint{\vec{X}}=\mathbf{A}\vec{X}\dint{t}+\mathbf{F}\dint{\vec{W}}.
+\end{align}
+as \citep{farrell:1996}. 
+\begin{align}
+\diff{\av{\vec{X}\transpose{\vec{X}}}}{t} = 
+\mathbf{A}\av{\vec{X}\transpose{\vec{X}}}+
+\av{\vec{X}\transpose{\vec{X}}}\transpose{\mathbf{A}}+
+\mathbf{F}\transpose{\mathbf{F}}
+\end{align}
+
+\subsection{Numerical scheme}
+
+The \SDE \eq{eq:sdeE} is integrated exactly one time step $h$ ahead as
+\begin{align}
+E(h) = E(0)e^{-(ik^2+\nu)h}+\sqrt{\nu\sigma}\int_0^t e^{-(ik^2+\nu)(t-s)}
+\left(\dint{W_1(s)}+i\dint{W_2(s)}\right)\label{eq:sde0i}
+\end{align}
+where the integral in the r.h.s of \eq{eq:sde0i} is an It\^o stochastic
+integral with respect to the Wiener processes $W_1$ and $W_2$. Using the
+explicit Euler-Maruyama approximation scheme \citep{higham:2001} we get
+the following update relation
+\begin{align}
+E_{t+1} = E_t\exp(-(ik^2+\nu)h)+\sqrt{\nu\sigma}\sqrt{h}\left(N(0,1)+iN(0,1)\right)
+\label{eq:sde0num}
+\end{align}
+Note that the Millstein scheme reduces to the Euler-Maruyama approximation
+since the modelled noise is additive \citep{higham:2001}.
+
+\subsection{Numerical experiments}
+
+\fig{fig:linwaves1} shows the expectation of the variance $\av{|E(t)|^2}$ computed from
+different realisations of $E(t)$ calculated with the numerical scheme \eq{eq:sde0num}.
+The parameters are given in the caption. The statistics of the variance estimated from the 
+numerical integration scheme \eq{eq:sde0num} is in good agreement with the analytic
+solution of the expectation given by \eq{eq:sde0a}.
+
+\begin{figure}[ht]
+\centering\includegraphics[width=0.9\columnwidth]{numeric1}
+\caption{Expectation of the variance of the solution of \eq{eq:sde0num} for 300
+different paths and the analytic solution \eq{eq:sde0a}. Parameters are
+$h=1e^{-2}$, $\nu=1e^{-2}$, $k=1$, $\sigma=1$, $E(0)=1$ and therefore $\src=0.1$.
+The cyan line is mean value of $\av{|E(t)|^2}$, the red line is the median, the blue and green
+lines are the upper and lower quartiles.}
+\label{fig:linwaves1}
+\end{figure}
+
+\fig{fig:linwaves2} shows the result for a run with same parameters as
+\fig{fig:linwaves1} but with $\nu=1$. 
+The mean value (cyan line) is in good agreement with the prediction but the median (red line) 
+is biased and smaller than the analytic expectation.
+\begin{figure}[ht]
+\centering\includegraphics[width=0.9\columnwidth]{numeric2}
+\caption{Same as \fig{fig:linwaves1} but with $\nu=1$.}
+\label{fig:linwaves2}
+\end{figure}
+
+\fig{fig:linwaves3} show the result of a run with even larger value of $\nu=10$. 
+The result statistics shows large bias from the analytic solution.
+\begin{figure}[ht]
+\centering\includegraphics[width=0.9\columnwidth]{numeric3}
+\caption{Same as \fig{fig:linwaves1} but with $\nu=10$.}
+\label{fig:linwaves3}
+\end{figure}
+
+\fig{fig:linwaves4} show the result of a run with the same large value of $\nu=10$ but
+with a smaller value for time step $h=1e^{-5}$. Reducing the time step does not seem to improve
+the statistics.
+\begin{figure}[ht]
+\centering\includegraphics[width=0.9\columnwidth]{numeric4}
+\caption{Same as \fig{fig:linwaves3} but with $h=1e^{-5}$.}
+\label{fig:linwaves4}
+\end{figure}
+
+%\clearpage
+
+\section{Questions}
+
+\begin{enumerate}
+\item Is \eq{eq:sde0i} a correct integral form of the \SDE \eq{eq:sdeE}?
+\item Is there something wrong with the numerical scheme \eq{eq:sde0num}? 
+Can the scheme be split into the exact solution for the deterministic component of the equation 
+and the Euler-Maruyama approximation for the stochastic component?
+\item If not, is there a quantitative criteria to check when the stochastic numerical
+scheme will converge or break (i.e.\ the statistics start to be biased)? 
+It seems that there should be a relation between $\nu$ and $h$?
+\item Is there a way to refine the stochastic numerical scheme \eq{eq:sde0num} to extend
+the domain of validity for large parameters $\nu$? 
+As I understand the Millstein scheme reduces in the case
+of constant forcing (or additive noise) to the Euler-Maruyama.
+\item Do you have any references about numerical aspects of \SDE?
+\end{enumerate}
+
+\bibliography{abbrevs,research,books}
+
+
+\end{document}
+
+An alternative \eq{eq:itoint} is to use the following 
+Stratonovich integral (CHECK THIS!)
+\begin{falign}
+e^{-\alpha h}\int_0^h e^{\alpha s}\dint{W(s)}\simeq
+e^{-\alpha h}\sum_{j=0}^{N-1}\exp\left(\alpha\frac{h}{N}
+\left(j+\frac{1}{2}\right)\right)
+\sqrt{\frac{h}{N}}N(0,1)
+\label{eq:stratoint}
+\end{falign}
+or the It\^o integral
+\begin{falign}
+e^{-\alpha h}\int_0^h \exp(\alpha s )\dint{W(s)}\simeq
+e^{-\alpha h}\sum_{j=0}^{N-1}\exp\left(\alpha\frac{h}{N}j\right)
+\sqrt{\frac{h}{N}}N(0,1)
+\label{eq:itoint2}
+\end{falign}
+
