@@ -4,3 +4,6 @@
 [submodule "src/c++-tools"]
 	path = src/c++-tools
 	url = git@github.com:pguio/cplusplus-tools.git
+[submodule "matlab/@sd"]
+	path = matlab/@sd
+	url = git@github.com:pguio/sd.git
