@@ -6,18 +6,20 @@
 
 Introduction
 ============
-This package is a solver for the zakharov equation in one-dimension and for
+
+This package is a solver for the Zakharov equations in one-dimension and for
 periodic solutions as described in Payne (1983).
 
 
 License:
 ========
-Zakharov is distributed under the terms of the GNU General Public License.
 
+Zakharov is distributed under the terms of the GNU General Public License.
 
 
 Content:
 ========
+
 The directory matlab contains a Matlab version of the solver. The names
 containing the expression _inf is for an infinite domain (use of sech
 instead of the Jacobi elliptic function dn).
@@ -29,6 +31,25 @@ latex to generate a document with tables and figures included.
 
 Bibligraphy:
 ============
+
+H. Akbari, P. Guio, M. A. Hirsch, and J. L. Semeter. Zakharov simulations of
+beam-induced turbulence in the auroral ionosphere. J. Geophys. Res., 121(5)
+:4811–4825, May 2016. doi:10.1002/2016JA022605.
+
+H. Akbari, J. L. Semeter, M. A. Hirsch, P. Guio, and M. J. Nicolls. Evidence
+for generation of unstable suprathermal electron population in the auroral
+F-region. Geophys. Res. Lett., 42 :185–192, 2015. doi:10.100 2/2014GL062598.
+AGU Research Spotlight : Unstable Electron Populations in the Ionosphere.
+
+B. Isham, M. T. Rietveld, P. Guio, F. R. E. Forme, T. Grydeland, and E.
+Mjølhus. Cavitating Langmuir Turbulence in the Terrestrial Aurora. Phys.
+Rev. Lett., 108(10) :105003, March 2012. doi:10.1103/PhysRevLett.108.105003.
+APS Synopsis (spotlighting exceptional research) : Watch Those Cavities.
+
+P. Guio and F. Forme. Zakharov simulations of Langmuir turbulence : effects
+on the ion-acoustic waves in incoherent scattering. Phys. Plasmas, 13(12)
+:122902–+, December 2006. doi:10.1063/1.2402145.
+
 G. L. Payne, D. R. Nicholson and R. M. Downie, "Numerical solution of the
 Zakharov equations", J. Comp. Phys, 50, 482-498, 1983.
 
