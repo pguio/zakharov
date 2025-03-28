@@ -1,5 +1,5 @@
 %
-% $Id: numeric_sde.tex,v 1.44 2010/07/01 18:06:20 patrick Exp $
+% $Id: numeric_sde.tex,v 1.48 2025/03/28 16:29:25 patrick Exp $
 %
 % Copyright (c) 2000 Patrick Guio <patrick@phys.uit.no>
 %
@@ -26,7 +26,10 @@
 \usepackage{graphicx}
 \usepackage{fancybox}
 \usepackage{xspace}
-\usepackage{natbib}
+\usepackage[natbibapa]{apacite}
+
+
+\graphicspath{ {.}{./figs} }
 
 \parindent 0cm
 
@@ -71,12 +74,13 @@
 
 \def\matlab/{\textsc{Matlab}}
 
-\bibliographystyle{agu}
+\bibliographystyle{apacite}
 
 
 \title{Note on numerical integration of stochastic differential equations}
 \author{Patrick Guio}
-\date{\normalsize$ $Date: 2010/07/01 18:06:20 $ $,~ $ $Revision: 1.44 $ $}
+\date{July 2010}
+%\date{\normalsize$ $Date: 2025/03/28 16:29:25 $ $,~ $ $Revision: 1.48 $ $}
 
 \begin{document}
 
@@ -85,7 +89,7 @@
 \section{Introduction to stochastic calculus}
 
 \subsection{Normal random variable}
-label{sub:normal}
+\label{sub:normal}
 
 The normal or Gaussian random variable $Y=\gaussian(m,\sigma^2)$ has its 
 probability density function $P$ given by
@@ -233,7 +237,8 @@ moments of the process $X$, although the Langevin is usually handier.
 It can also be used to compute the stationary or equilibrium probability
 density function $P(x;t\rightarrow\infty|x_0, t_0)$, which for some
 function $A$ and $D$ exists independently of $t$, $X(t_0)$ and $t_0$
-\citep{gillespie:1996c}, as for example Langmuir strong turbulence \citep{?}.
+\citep{gillespie:1996c}, as for example Langmuir strong turbulence
+\citep{guio:2006,isham:2012}.
 
 The density probability function $P$ also satisfies the \PDE
 \begin{align}
