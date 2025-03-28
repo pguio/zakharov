@@ -2,7 +2,7 @@ function OUsimu
 % function OUsimu
 
 %
-% $Id: OUsimu.m,v 1.5 2010/06/14 14:13:46 patrick Exp $
+% $Id: OUsimu.m,v 1.6 2025/03/24 15:53:53 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -74,13 +74,13 @@ else
 scale = 1;
 end
 
-RandStream.setDefaultStream(RandStream('mt19937ar','seed',seed));
+RandStream.setGlobalStream(RandStream('mt19937ar','seed',seed));
 Se = OU_exact(S0, dT, n, mu, c, tau, nexp);
 Se = Se./scale;
 Sem = mean(Se)';
 Ses = std(Se)';
 
-RandStream.setDefaultStream(RandStream('mt19937ar','seed',seed));
+RandStream.setGlobalStream(RandStream('mt19937ar','seed',seed));
 Sa = OU_euler(S0, dT, n, mu, c, tau, nexp);
 Sa = Sa./scale;
 Sam = mean(Sa)';
