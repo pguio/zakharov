@@ -1,3 +1,33 @@
+2025-03-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/linwaves.tex (1.29):
+	Changed bib style to APA.
+
+2025-03-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/numeric_sde.tex (1.48):
+	Fixed typo.
+
+2025-03-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/numeric_sde.tex (1.47):
+	Changed bibstyle to APA.
+
+2025-03-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/numeric_sde.tex (1.46):
+	Added reference.
+
+2025-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/numeric_sde.tex (1.45):
+	Fixed typo.
+
+2025-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/OUsimu.m (1.6):
+	Updated to latest Matlab method RandStream.setGlobalStream().
+
 2024-02-13  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* share/Makefile.am (1.6):
@@ -1244,12 +1274,12 @@
 	* src/mapper.cpp (1.91):
 	Fixed ion-acoustic damping from Robinson 97, there is obviously a typo.
 
-2007-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* src/mapper.cpp (1.90):
 	Fixed returned value in member function mapper::initDiffusion().
 
-2007-07-22  Patrick Guio <p.guio@ucl.ac.uk>
+2007-07-23  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* src/mapper.cpp (1.89), src/mapper.h (1.57), src/thermal-fluct.cpp
 	  (1.38):
@@ -1594,12 +1624,12 @@
 	* src/zakharov.cpp (1.175):
 	Added code to set planner flag when using the FFT3 Fourier transform wrapper.
 
-2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+2007-05-28  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* tests/Fftw.cpp (1.10):
 	Updated Fourier transform class definition.
 
-2007-05-27  Patrick Guio <p.guio@ucl.ac.uk>
+2007-05-28  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* src/mapper.cpp (1.72):
 	Fixed default value for member physical_units.
